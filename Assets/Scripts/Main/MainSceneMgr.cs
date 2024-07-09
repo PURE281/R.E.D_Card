@@ -37,6 +37,10 @@ public class MainSceneMgr : MonoSingleton<MainSceneMgr>
         {
             ToIntroScene();
         });
+        btns[4].onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
         ToastManager.Instance.CreatToast("初始化成功");
     }
 
@@ -57,5 +61,10 @@ public class MainSceneMgr : MonoSingleton<MainSceneMgr>
     {
         AssetsBundlesMgr.Instance?.UnloadAllAssetBundles();
         SceneManager.LoadScene("MainScene");
+    }
+
+    public void ToChrome(string url)
+    {
+        Application.OpenURL(url);
     }
 }

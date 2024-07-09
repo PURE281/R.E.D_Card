@@ -16,26 +16,26 @@ public class CheckPlatform : MonoBehaviour
     void Awake()
     {
 
-#if UNITY_EDITOR_WIN
         GlobalConfig.Instance.Platform = 1;
-#else
-        int a = GetUA();
-        if (a == 1)
-        {
-            Debug.Log("我是电脑1");
-            text.text = "我是电脑";
-            GlobalConfig.Instance.Platform = 1;
-            _pcPanel.SetActive(true);
-            _mobilePanel.SetActive(false);
-        }
-        if (a == 2)
-        {
-            Debug.Log("我是手机");
-            text.text = "我是手机"; 
-            GlobalConfig.Instance.Platform = 2;
-            _pcPanel.SetActive(false);
-            _mobilePanel.SetActive(true);
-        }
-#endif
+//#if UNITY_EDITOR_WIN
+//#else
+//        int a = GetUA();
+//        if (a == 1)
+//        {
+//            Debug.Log("我是电脑1");
+//            text.text = "我是电脑";
+//            GlobalConfig.Instance.Platform = 1;
+//            _pcPanel.SetActive(true);
+//            _mobilePanel.SetActive(false);
+//        }
+//        if (a == 2)
+//        {
+//            Debug.Log("我是手机");
+//            text.text = "我是手机"; 
+//            GlobalConfig.Instance.Platform = 2;
+//            _pcPanel.SetActive(false);
+//            _mobilePanel.SetActive(true);
+//        }
+//#endif
     }
 }
