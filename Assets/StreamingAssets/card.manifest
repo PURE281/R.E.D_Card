@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 3174717452
+CRC: 2917581081
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 948915487fc2f311976319e2f3cc2c8c
+    Hash: 710a521f7716159ea8a7840dea957c97
   TypeTreeHash:
     serializedVersion: 2
     Hash: f267fd2d8bcb1179236b6179ac5313bc
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 948915487fc2f311976319e2f3cc2c8c
+    Hash: 710a521f7716159ea8a7840dea957c97
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -19,16 +19,55 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Resources/UI/Cards/tx02.png
+- Assets/Resources/UI/Cards/qy07.jpg
+- Assets/Resources/UI/Cards/xr09.jpg
+- Assets/Resources/UI/Cards/qy14.jpg
+- Assets/Resources/UI/Cards/yl05.jpg
+- Assets/Resources/UI/Cards/lx04.jpg
+- Assets/Resources/UI/Cards/yl06.jpg
+- Assets/Resources/UI/Cards/zl03.jpg
+- Assets/Resources/UI/Cards/qy12.jpg
+- Assets/Resources/UI/Cards/qy03.jpg
+- Assets/Resources/UI/Cards/jy03.jpg
+- Assets/Resources/UI/Cards/lx02.png
+- Assets/Resources/UI/Cards/xr05.jpg
+- Assets/Resources/UI/Cards/lx03.jpg
+- Assets/Resources/UI/Cards/jy06.jpg
+- Assets/Resources/UI/Cards/tx03.jpg
+- Assets/Resources/UI/Cards/xr0.png
+- Assets/Resources/UI/Cards/tx04.jpg
+- Assets/Resources/UI/Cards/yl03.jpg
+- Assets/Resources/UI/Cards/zl04.jpg
+- Assets/Resources/UI/Cards/yl01.png
+- Assets/Resources/UI/Cards/xr03.jpg
+- Assets/Resources/UI/Cards/xr06.jpg
+- Assets/Resources/UI/Cards/qy16.jpg
+- Assets/Resources/UI/Cards/qy10.jpg
+- Assets/Resources/UI/Cards/qy09.jpg
 - Assets/Resources/UI/Cards/lx0.png
 - Assets/Resources/UI/Cards/qy01.png
+- Assets/Resources/UI/Cards/jy09.jpg
 - Assets/Resources/UI/Cards/yl02.png
 - Assets/Resources/UI/Cards/xr02.png
 - Assets/Resources/UI/Cards/zl02.png
-- Assets/Resources/UI/Cards/lx02.png
+- Assets/Resources/UI/Cards/qy06.jpg
+- Assets/Resources/UI/Cards/xr04.jpg
+- Assets/Resources/UI/Cards/qy13.jpg
 - Assets/Resources/UI/Cards/qy02.png
 - Assets/Resources/UI/Cards/zl01.png
+- Assets/Resources/UI/Cards/jy04.jpg
+- Assets/Resources/UI/Cards/xr08.jpg
+- Assets/Resources/UI/Cards/qy08.jpg
 - Assets/Resources/UI/Cards/tx0.png
-- Assets/Resources/UI/Cards/xr0.png
+- Assets/Resources/UI/Cards/jy05.jpg
 - Assets/Resources/UI/Cards/jy02.png
-- Assets/Resources/UI/Cards/yl01.png
+- Assets/Resources/UI/Cards/qy05.jpg
+- Assets/Resources/UI/Cards/qy11.jpg
+- Assets/Resources/UI/Cards/yl04.jpg
+- Assets/Resources/UI/Cards/jy08.jpg
+- Assets/Resources/UI/Cards/xr07.jpg
+- Assets/Resources/UI/Cards/jy07.jpg
+- Assets/Resources/UI/Cards/yx0.jpg
+- Assets/Resources/UI/Cards/qy04.jpg
+- Assets/Resources/UI/Cards/qy15.jpg
 Dependencies: []

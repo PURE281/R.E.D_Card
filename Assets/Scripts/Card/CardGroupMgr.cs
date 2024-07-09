@@ -49,7 +49,10 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
     {
     }
 
+    public void GetCard()
+    {
 
+    }
 
 
     public void RestartGetCards()
@@ -93,8 +96,9 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         Shuffle<Sprite>(sprite_cards_list);
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].gameObject.transform.GetChild(0).GetComponent<Image>().sprite = sprite_cards_list[i];
-            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = sprite_cards_list[i];
+            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            cards[i].gameObject.transform.DORotate(new Vector3(0,0,(i+1)*15),0.1f);
             cards[i].GetComponent<CardTurnOver>().StartFront();
         }
     }

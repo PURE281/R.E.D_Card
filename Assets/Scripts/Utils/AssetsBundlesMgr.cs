@@ -15,6 +15,8 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
     [SerializeField]
     private List<Sprite> sprite_cards_list = new List<Sprite>();
 
+    private Dictionary<string,CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
+
     private GameObject cardGo;
     public IEnumerator InitIE(int cardMax)
     {
@@ -22,7 +24,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
         yield return StartCoroutine(LoadPicture());
         yield return StartCoroutine(InitLoadCard(cardMax));
     }
-    IEnumerator InitLoadCard(int cardMax)
+    public IEnumerator InitLoadCard(int cardMax)
     {
 
         yield return StartCoroutine(LoadAB("prefabs", "Card"));
@@ -164,14 +166,23 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
             foreach (var item in lists)
             {
                 //print(item.Name);
-                string pathname = item.Replace("\r", "");
+                string[] infos = item.Replace("\r", "").Split(",");
+                string pathname = infos[0];
+                CardInfo cardInfo = new CardInfo();
+                cardInfo.cast = infos[1];
+                cardInfo.num = infos[2];
+                cardInfo.type = infos[3];
+                cardInfo.description = infos[4].Replace("\"","");
+                CardInfoDicts.Add(pathname,cardInfo);
                 string suffixName = pathname.Substring(pathname.Length - 3, 3);   //获取文件后缀名，用以判断是否为图片
                 suffixName = suffixName.ToLower();
+                Debug.Log(item+">>>"+suffixName);
                 if (suffixName == "jpg" || suffixName == "png")
                 {
                     string path = Path.Combine(Application.streamingAssetsPath, pathname);
                     Texture texture2D = bundle.LoadAsset<Texture>(pathname);
                     Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
+                    tempSprite.name = pathname;
                     Sprite_cards_list.Add(tempSprite);
                 }
 
@@ -189,6 +200,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
 
     public List<Sprite> Sprite_cards_list { get => sprite_cards_list; set => sprite_cards_list = value; }
     public List<GameObject> Cards { get => cards; set => cards = value; }
+    public Dictionary<string, CardInfo> CardInfoDicts { get => cardInfoDicts; set => cardInfoDicts = value; }
 
     public void UnloadAssetBundle(string assetBundleName)
     {
@@ -207,5 +219,13 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
         {
             UnloadAssetBundle(key);
         }
+    }
+
+    public class CardInfo
+    {
+        public string cast;
+        public string num;
+        public string type;
+        public string description;
     }
 }

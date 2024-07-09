@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static AssetsBundlesMgr;
 
 /// <summary>
 /// 回合制对战系统的管理脚本
@@ -11,6 +13,8 @@ public class BattleSystemMgr : MonoBehaviour
     private List<GameObject> cards = new List<GameObject>();
 
     private List<Sprite> sprite_cards_list = new List<Sprite>();
+
+    private Dictionary<string,CardInfo> cardinfos = new Dictionary<string,CardInfo>();
     // Start is called before the first frame update
     void Start()
     {
@@ -23,19 +27,41 @@ public class BattleSystemMgr : MonoBehaviour
     {
 
     }
+
+    public void GetCard()
+    {
+        StartCoroutine(GetCardIE());
+    }
+    IEnumerator GetCardIE()
+    {
+        yield return AssetsBundlesMgr.Instance?.InitLoadCard(3);
+
+        for (int i = cards.Count - 1; i >= cards.Count-3; i--)
+        {
+            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = sprite_cards_list[i];
+            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            cards[i].GetComponent<CardTurnOver>().StartFront();
+            cards[i].AddComponent<CardItem>();
+            cards[i].GetComponent<CardItem>()._index = i;
+
+            CardInfo cardInfo = new CardInfo();
+            cardInfo.cast = cardinfos[sprite_cards_list[i].name].cast;
+            cardInfo.num = cardinfos[sprite_cards_list[i].name].num;
+            cardInfo.type = (cardinfos[sprite_cards_list[i].name].type == "1" ? "攻" : "辅");
+            cardInfo.description = cardinfos[sprite_cards_list[i].name].description;
+            cards[i].GetComponent<CardItem>().Init(cardInfo);
+            cards[i].gameObject.transform.GetChild(0).GetChild(2).GetComponentInChildren<Text>().text = cardInfo.cast;
+            cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(0).GetComponentInChildren<Text>().text = cardInfo.num;
+            cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(1).GetComponentInChildren<Text>().text = cardInfo.type;
+        }
+    }
     IEnumerator InitBattleScene()
     {
         yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(5));
         sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
         cards = AssetsBundlesMgr.Instance.Cards;
+        cardinfos = AssetsBundlesMgr.Instance?.CardInfoDicts;
         RollCards();
-        //初始化卡牌属性
-        for (int i = 0; i < cards.Count; i++)
-        {
-            cards[i].AddComponent<CardItem>();
-            cards[i].AddComponent<CardItem>()._index = i;
-
-        }
     }
     void RollCards()
     {
@@ -43,9 +69,20 @@ public class BattleSystemMgr : MonoBehaviour
         Shuffle<Sprite>(sprite_cards_list);
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].gameObject.transform.GetChild(0).GetComponent<Image>().sprite = sprite_cards_list[i];
-            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = sprite_cards_list[i];
+            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
             cards[i].GetComponent<CardTurnOver>().StartFront();
+            cards[i].AddComponent<CardItem>();
+            cards[i].GetComponent<CardItem>()._index = i;
+            CardInfo cardInfo = new CardInfo();
+            cardInfo.cast = cardinfos[sprite_cards_list[i].name].cast;
+            cardInfo.num= cardinfos[sprite_cards_list[i].name].num; 
+            cardInfo.type= (cardinfos[sprite_cards_list[i].name].type == "1" ? "攻" : "辅");
+            cardInfo.description = cardinfos[sprite_cards_list[i].name].description;
+            cards[i].GetComponent<CardItem>().Init(cardInfo);
+            cards[i].gameObject.transform.GetChild(0).GetChild(2).GetComponentInChildren<Text>().text = cardInfo.cast;
+            cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(0).GetComponentInChildren<Text>().text = cardInfo.num;
+            cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(1).GetComponentInChildren<Text>().text = cardInfo.type;
         }
     }
     // 假设你有一个方法来获取图片的原始尺寸  

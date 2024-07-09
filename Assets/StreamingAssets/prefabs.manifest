@@ -1,28 +1,38 @@
 ManifestFileVersion: 0
-CRC: 1698902631
+CRC: 3728996247
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e6d3b20b4cc4b180dc4c68c025ed54d4
+    Hash: 7792715c7fc0d70b41f6b3b4960c1ceb
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fa9b749bfca84abd4aef1fc80f6cbf5d
+    Hash: 4e451277128ba450b71d5b7d401ee4bc
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e6d3b20b4cc4b180dc4c68c025ed54d4
+    Hash: 7792715c7fc0d70b41f6b3b4960c1ceb
 HashAppended: 0
 ClassTypes:
 - Class: 1
   Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
 - Class: 28
   Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: f1370ee7a862a45429510534a1d5f06c, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 128
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -33,12 +43,16 @@ ClassTypes:
 SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.RectOffset
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.AnimationTriggers
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.Button/ButtonClickedEvent
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.ColorBlock
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.FontData
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 - AssemblyName: UnityEngine.UI
