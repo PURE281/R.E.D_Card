@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 487962245
+CRC: 1698902631
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 428c4c7cbf3878d7a86a75ef24009588
+    Hash: e6d3b20b4cc4b180dc4c68c025ed54d4
   TypeTreeHash:
     serializedVersion: 2
     Hash: fa9b749bfca84abd4aef1fc80f6cbf5d
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 428c4c7cbf3878d7a86a75ef24009588
+    Hash: e6d3b20b4cc4b180dc4c68c025ed54d4
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -32,11 +32,7 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
-  ClassName: UnityEngine.Events.ArgumentCache
-- AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
-- AssemblyName: UnityEngine.CoreModule
-  ClassName: UnityEngine.Events.PersistentListenerMode
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.AnimationTriggers
 - AssemblyName: UnityEngine.UI

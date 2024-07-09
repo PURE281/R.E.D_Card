@@ -25,8 +25,8 @@ public class MainSceneMgr : MonoSingleton<MainSceneMgr>
         });
         btns[1].onClick.AddListener(() =>
         {
-            ToastManager.Instance?.CreatToast("¾´ÇëÆÚ´ý");
-            return;
+            //ToastManager.Instance?.CreatToast("¾´ÇëÆÚ´ý");
+            //return;
             ToBattleScene();
         });
         btns[2].onClick.AddListener(() =>
@@ -55,7 +55,7 @@ public class MainSceneMgr : MonoSingleton<MainSceneMgr>
 
     public void ToMainScene()
     {
-        CardGroupMgr.Instance?.UnloadAllAssetBundles();
+        AssetsBundlesMgr.Instance?.UnloadAllAssetBundles();
         SceneManager.LoadScene("MainScene");
     }
 }

@@ -16,24 +16,6 @@ public class CardTurnOver : MonoSingleton<CardTurnOver>
     public CardState mCardState = CardState.Front;//卡牌当前的状态，是正面还是背面？
     public float mTime = 0.3f;
     private bool isActive = false;//true代表正在执行翻转，不许被打断
-    /// <summary>
-    /// 初始化卡牌角度，根据mCardState
-    /// </summary>
-    public void Init()
-    {
-        //if (mCardState == CardState.Front)
-        //{
-        //    //如果是从正面开始，则将背面旋转90度，这样就看不见背面了
-        //    mFront.transform.eulerAngles = Vector3.zero;
-        //    mBack.transform.eulerAngles = new Vector3(0, 90, 0);
-        //}
-        //else
-        //{
-        //    //从背面开始，同理
-        //    mFront.transform.eulerAngles = new Vector3(0, 90, 0);
-        //    mBack.transform.eulerAngles = Vector3.zero;
-        //}
-    }
     private void Start()
     {
     }

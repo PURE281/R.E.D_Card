@@ -428,9 +428,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d4c234668bd4046a48180fc23ecdf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  global: 0
-  cards: []
-  sprite_cards_list: []
   _startCardsbtn: {fileID: 1352740275}
 --- !u!114 &281823234
 MonoBehaviour:
@@ -447,7 +444,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 200
     m_Right: 0
-    m_Top: 400
+    m_Top: 230
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
@@ -624,6 +621,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 352121920}
+  - component: {fileID: 352121921}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -644,9 +642,22 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1204200210}
+  - {fileID: 2147226643}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &352121921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352121919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535162f8ea88b9f438f9b124185982f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &444783492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,7 +1873,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce32c71acf38b3549b5d8bfef2521ca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  global: 0
   _btnPanel: {fileID: 0}
 --- !u!1 &1352740273
 GameObject:
@@ -2406,9 +2416,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d4c234668bd4046a48180fc23ecdf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  global: 1
-  cards: []
-  sprite_cards_list: []
   _startCardsbtn: {fileID: 877264497}
 --- !u!114 &1659221441
 MonoBehaviour:
@@ -2767,3 +2774,48 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2147226642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2147226643}
+  - component: {fileID: 2147226644}
+  m_Layer: 0
+  m_Name: ABMgr
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2147226643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147226642}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 352121920}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2147226644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147226642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75aef0de92c350744b0709ade990fa99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite_cards_list: []

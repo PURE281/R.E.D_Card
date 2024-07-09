@@ -15,9 +15,9 @@ using UnityEngine.UI;
 /// </summary>
 public class CardGroupMgr : MonoSingleton<CardGroupMgr>
 {
-    public List<CardTurnOver> cards = new List<CardTurnOver>();
+    private List<GameObject> cards = new List<GameObject>();
 
-    public List<Sprite> sprite_cards_list = new List<Sprite>();
+    private List<Sprite> sprite_cards_list = new List<Sprite>();
 
     private bool isActive = false;
 
@@ -26,74 +26,30 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
     void Awake()
     {
 
-        _startCardsbtn.interactable = false;
-        StartCoroutine(InitIE());
-
     }
-    IEnumerator InitIE()
+
+    public IEnumerator InitCarddScene()
     {
-        yield return StartCoroutine(InitCard());
-        StartCoroutine(LoadPicture(() =>
+
+        if (_startCardsbtn)
         {
+            _startCardsbtn.interactable = false;
+            yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(10));
+            sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
+            cards = AssetsBundlesMgr.Instance.Cards;
             RollCards();
             _startCardsbtn.interactable = true;
-        }));
-    }
-    IEnumerator InitCard()
-    {
-
-        yield return StartCoroutine(LoadAB("prefabs", "Card", (cardgo) =>
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                GameObject gameObject1 = Instantiate(cardgo);
-                if (GlobalConfig.Instance.Platform == 1)
-                {
-                    gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardPanel"));
-                    gameObject1.transform.localScale = Vector3.one;
-                    cards.Add(gameObject1.GetComponent<CardTurnOver>());
-                }
-                else if (GlobalConfig.Instance.Platform == 2)
-                {
-                    gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("Mobile/CardPanel"));
-                    gameObject1.transform.localScale = Vector3.one;
-                    cards.Add(gameObject1.GetComponent<CardTurnOver>());
-                }
-            }
-        }));
-    }
-    IEnumerator LoadAB(string abname, string filename, Action<GameObject> action)
-    {
-        //加载卡牌预制体
-        var uri = new System.Uri(Path.Combine(Application.streamingAssetsPath, abname));
-        using (UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(uri))
-        {
-            yield return request.SendWebRequest();
-            if (request.isNetworkError || request.isHttpError)
-            {
-                Debug.Log(request.error);
-                Debug.Log(request.error);
-            }
-            else
-            {
-                AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request);
-                GameObject prefab = bundle.LoadAsset<GameObject>(filename);
-                loadedAssetBundles.Add(abname, bundle);
-                action?.Invoke(prefab);
-            }
         }
     }
+
+   
+
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
 
-    public void GetCards()
-    {
-        StartCoroutine(GetCardsFrontIE());
-    }
 
 
     public void RestartGetCards()
@@ -114,7 +70,7 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         isActive = true;
         for (int i = 0; i < cards.Count; i++)
         {
-            yield return cards[i].ToFront();
+            yield return cards[i].GetComponent<CardTurnOver>().ToFront();
             yield return 0.5f;
         }
         isActive = false;
@@ -126,8 +82,8 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
 
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].mFront.transform.DORotate(new Vector3(0, 90, 0), 0);
-            cards[i].mBack.transform.DORotate(new Vector3(0, 0, 0), 0);
+            cards[i].GetComponent<CardTurnOver>().mFront.transform.DORotate(new Vector3(0, 90, 0), 0);
+            cards[i].GetComponent<CardTurnOver>().mBack.transform.DORotate(new Vector3(0, 0, 0), 0);
         }
         action?.Invoke();
     }
@@ -139,6 +95,7 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         {
             cards[i].gameObject.transform.GetChild(0).GetComponent<Image>().sprite = sprite_cards_list[i];
             AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            cards[i].GetComponent<CardTurnOver>().StartFront();
         }
     }
     // 假设你有一个方法来获取图片的原始尺寸  
@@ -178,100 +135,5 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
             list[k] = list[n];
             list[n] = value;
         }
-    }
-
-    /// <summary>
-    ///   //获取文件夹下所有jpg/png图片路径，并把图片转换为sprite，存进指定的集合
-    /// </summary>
-    /// <param 文件夹路径="path"></param>
-    /// <param 用于存放图片的集合="PhotoList"></param>
-    IEnumerator LoadPicture(Action action)
-    {
-
-        var uri = new System.Uri(Path.Combine(Application.streamingAssetsPath, "CardInfo.jsonl"));
-        string[] lists = null;
-
-        UnityWebRequest request = UnityWebRequest.Get(uri);
-        yield return request.SendWebRequest();
-        if (request.isNetworkError || request.isHttpError)
-        {
-            Debug.Log(request.error);
-        }
-        else
-        {
-            string list = request.downloadHandler.text;
-            lists = list.Split("\n");
-
-        }
-        if (lists.Length > 0)
-        {
-            uri = new System.Uri(Path.Combine(Application.streamingAssetsPath, "card"));
-            UnityWebRequest request1 = UnityWebRequestAssetBundle.GetAssetBundle(uri);
-
-            yield return request1.SendWebRequest();
-
-            if (request1.isNetworkError || request1.isHttpError)
-            {
-                Debug.Log(request1.error);
-                Debug.Log(request1.error);
-            }
-            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request1);
-
-            loadedAssetBundles.Add("card", bundle);
-            foreach (var item in lists)
-            {
-                //print(item.Name);
-                string pathname = item.Replace("\r", "");
-                string suffixName = pathname.Substring(pathname.Length - 3, 3);   //获取文件后缀名，用以判断是否为图片
-                suffixName = suffixName.ToLower();
-                if (suffixName == "jpg" || suffixName == "png")
-                {
-                    string path = Path.Combine(Application.streamingAssetsPath, pathname);
-                    //photoNames.Add(item.Name);
-                    //LoadImageByIO(path + @"\" + item.Name, sprite_cards_list);
-                    //yield return StartCoroutine(ReadTexture(pathname, (texture2D) =>
-                    //{
-                    //    Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
-                    //    sprite_cards_list.Add(tempSprite);
-                    //}));
-                    Texture texture2D = bundle.LoadAsset<Texture>(pathname);
-                    Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
-                    sprite_cards_list.Add(tempSprite);
-                }
-
-
-            }
-        }
-        else
-        {
-            print("文件夹为空:" + uri);
-        }
-        action?.Invoke();
-        //return sprite_cards_list;
-
-    }
-    private Dictionary<string, AssetBundle> loadedAssetBundles = new Dictionary<string, AssetBundle>();
-    public void UnloadAssetBundle(string assetBundleName)
-    {
-        if (loadedAssetBundles.ContainsKey(assetBundleName))
-        {
-            AssetBundle assetBundle = loadedAssetBundles[assetBundleName];
-            assetBundle.Unload(true); // false表示不卸载AssetBundle中的Assets，仅卸载AssetBundle本身  
-            loadedAssetBundles.Remove(assetBundleName);
-            Debug.Log("Unloaded AssetBundle: " + assetBundleName);
-        }
-    }
-    public void UnloadAllAssetBundles()
-    {
-        List<string> keys = new List<string>(loadedAssetBundles.Keys);
-        foreach (string key in keys)
-        {
-            UnloadAssetBundle(key);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        
     }
 }
