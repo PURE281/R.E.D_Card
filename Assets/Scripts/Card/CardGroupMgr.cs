@@ -9,6 +9,10 @@ using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
+public enum CardPrefabType
+{
+    BattleCard,Card
+}
 /// <summary>
 /// 这是用来管理抽卡的卡组的管理类
 /// 实现功能，打乱卡牌顺序，随机按照顺序依次出现，然后依次转出正面，在特别的图片中需要有特定的处理
@@ -34,7 +38,7 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         if (_startCardsbtn)
         {
             _startCardsbtn.interactable = false;
-            yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(10));
+            yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(CardPrefabType.Card,10));
             sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
             cards = AssetsBundlesMgr.Instance.Cards;
             RollCards();

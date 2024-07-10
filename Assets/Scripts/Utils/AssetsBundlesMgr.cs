@@ -15,19 +15,29 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
     [SerializeField]
     private List<Sprite> sprite_cards_list = new List<Sprite>();
 
-    private Dictionary<string,CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
+    private Dictionary<string, CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
 
     private GameObject cardGo;
-    public IEnumerator InitIE(int cardMax)
+
+    public IEnumerator InitIE(CardPrefabType cardType, int cardMax)
     {
         //UnloadAllAssetBundles();
         yield return StartCoroutine(LoadPicture());
-        yield return StartCoroutine(InitLoadCard(cardMax));
+        yield return StartCoroutine(InitLoadCard(cardType, cardMax));
     }
-    public IEnumerator InitLoadCard(int cardMax)
+    public IEnumerator InitLoadCard(CardPrefabType cardType, int cardMax)
     {
-
-        yield return StartCoroutine(LoadAB("prefabs", "Card"));
+        string assetsName = "";
+        switch (cardType)
+        {
+            case CardPrefabType.Card:
+                assetsName = "Card";
+                break;
+            case CardPrefabType.BattleCard:
+                assetsName = "BattleCard";
+                break;
+        }
+        yield return StartCoroutine(LoadAB("prefabs", assetsName));
         for (int i = 0; i < cardMax; i++)
         {
             GameObject gameObject1 = Instantiate(cardGo);
@@ -159,7 +169,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
                 loadedAssetBundles.Add("card", bundle);
             }
             else
-            {   
+            {
                 bundle = loadedAssetBundles["card"];
             }
 
@@ -172,11 +182,15 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
                 cardInfo.cast = infos[1];
                 cardInfo.num = infos[2];
                 cardInfo.type = infos[3];
-                cardInfo.description = infos[4].Replace("\"","");
-                CardInfoDicts.Add(pathname,cardInfo);
+                cardInfo.description = infos[4].Replace("\"", "");
+                if (infos.Length > 5 && !"".Equals(infos[5]))
+                {
+                    cardInfo.clipPath = $"{Application.dataPath}/Resources/Music/clips/{infos[5].Replace("\"", "")}";
+                }
+                CardInfoDicts.Add(pathname, cardInfo);
                 string suffixName = pathname.Substring(pathname.Length - 3, 3);   //获取文件后缀名，用以判断是否为图片
                 suffixName = suffixName.ToLower();
-                Debug.Log(item+">>>"+suffixName);
+                Debug.Log(item + ">>>" + suffixName);
                 if (suffixName == "jpg" || suffixName == "png")
                 {
                     string path = Path.Combine(Application.streamingAssetsPath, pathname);
@@ -227,5 +241,6 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
         public string num;
         public string type;
         public string description;
+        public string clipPath;
     }
 }

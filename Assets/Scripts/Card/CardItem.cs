@@ -13,21 +13,36 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
     public string _num;
     public string _type;
     public string _Description;
+    public string _clipPath;
     public int _index;
 
     private GameObject _mainCanvas;
     public GameObject _cardDescPanel;
-
+    public AudioSource _audioSource;
     private void Awake()
     {
         _mainCanvas = GameObject.FindWithTag("MainCanvas");
         _cardDescPanel = GameObject.FindWithTag("MainCanvas").transform.GetChild(1).GetChild(2).gameObject;
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.loop = false;
+        _audioSource.playOnAwake = false;
         this.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
-            Debug.Log(this._Description);
-            _cardDescPanel.SetActive(true);
-            _cardDescPanel.GetComponentInChildren<Text>().text = this._Description;
+            if (_clipPath != null)
+            {
+                StartCoroutine(playClip());
+            }
         });
+    }
+
+    IEnumerator playClip()
+    {
+
+        Debug.Log(this._Description);
+        WWW www = new WWW(this._clipPath);
+        yield return www;
+        _audioSource.clip = www.GetAudioClip();
+        _audioSource.Play();
     }
     public void Init(CardInfo infos)
     {
@@ -35,6 +50,7 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
         this._num = infos.num;
         this._type = infos.type;
         this._Description = infos.description;
+        this._clipPath = infos.clipPath;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -57,6 +73,8 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
         this.transform.parent.GetComponent<HorizontalLayoutGroup>().enabled = false;
         this.transform.DOScale(new Vector3(1.2f, 1.2f), 0.5f);
         this.transform.parent = _mainCanvas.transform.Find("PC/CardPanel2");
+        _cardDescPanel.SetActive(true);
+        _cardDescPanel.GetComponentInChildren<Text>().text = this._Description;
     }
 
     public void OnPointerExit(PointerEventData eventData)

@@ -34,7 +34,7 @@ public class BattleSystemMgr : MonoBehaviour
     }
     IEnumerator GetCardIE()
     {
-        yield return AssetsBundlesMgr.Instance?.InitLoadCard(3);
+        yield return AssetsBundlesMgr.Instance?.InitLoadCard(CardPrefabType.BattleCard,3);
 
         for (int i = cards.Count - 1; i >= cards.Count-3; i--)
         {
@@ -49,6 +49,7 @@ public class BattleSystemMgr : MonoBehaviour
             cardInfo.num = cardinfos[sprite_cards_list[i].name].num;
             cardInfo.type = (cardinfos[sprite_cards_list[i].name].type == "1" ? "¹¥" : "¸¨");
             cardInfo.description = cardinfos[sprite_cards_list[i].name].description;
+            cardInfo.clipPath = cardinfos[sprite_cards_list[i].name].clipPath;
             cards[i].GetComponent<CardItem>().Init(cardInfo);
             cards[i].gameObject.transform.GetChild(0).GetChild(2).GetComponentInChildren<Text>().text = cardInfo.cast;
             cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(0).GetComponentInChildren<Text>().text = cardInfo.num;
@@ -57,7 +58,7 @@ public class BattleSystemMgr : MonoBehaviour
     }
     IEnumerator InitBattleScene()
     {
-        yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(5));
+        yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(CardPrefabType.BattleCard, 5));
         sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
         cards = AssetsBundlesMgr.Instance.Cards;
         cardinfos = AssetsBundlesMgr.Instance?.CardInfoDicts;
@@ -79,6 +80,7 @@ public class BattleSystemMgr : MonoBehaviour
             cardInfo.num= cardinfos[sprite_cards_list[i].name].num; 
             cardInfo.type= (cardinfos[sprite_cards_list[i].name].type == "1" ? "¹¥" : "¸¨");
             cardInfo.description = cardinfos[sprite_cards_list[i].name].description;
+            cardInfo.clipPath = cardinfos[sprite_cards_list[i].name].clipPath;
             cards[i].GetComponent<CardItem>().Init(cardInfo);
             cards[i].gameObject.transform.GetChild(0).GetChild(2).GetComponentInChildren<Text>().text = cardInfo.cast;
             cards[i].gameObject.transform.GetChild(0).GetChild(3).GetChild(0).GetComponentInChildren<Text>().text = cardInfo.num;

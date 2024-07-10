@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 413296289
+CRC: 2962428480
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 38d8efdb5e43d9a3fa7e6a38e1558dea
+    Hash: 8a800a22eb10aa3e5a61e1ba92cae034
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4e451277128ba450b71d5b7d401ee4bc
+    Hash: 7267cfe695a5ec938069f811b8eaeff9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 38d8efdb5e43d9a3fa7e6a38e1558dea
+    Hash: 8a800a22eb10aa3e5a61e1ba92cae034
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -20,14 +20,16 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: f1370ee7a862a45429510534a1d5f06c, type: 3}
 - Class: 115
@@ -60,5 +62,6 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
+- Assets/Resources/Prefabs/BattleCard.prefab
 - Assets/Resources/Prefabs/Card.prefab
 Dependencies: []
