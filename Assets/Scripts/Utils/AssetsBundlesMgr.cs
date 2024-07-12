@@ -13,7 +13,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
     //public int cardMax = 10;
     private List<GameObject> cards = new List<GameObject>();
     [SerializeField]
-    private List<Sprite> sprite_cards_list = new List<Sprite>();
+    //private List<Sprite> sprite_cards_list = new List<Sprite>();
 
     private Dictionary<string, CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
 
@@ -114,18 +114,6 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
 
         // 注意：如果你想要保持高度并调整宽度，只需交换width和height的计算即可  
     }
-    void Shuffle<T>(List<T> list)
-    {
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = UnityEngine.Random.Range(0, n + 1); // 注意Unity的Random.Range是包含上限的  
-            T value = list[k];
-            list[k] = list[n];
-            list[n] = value;
-        }
-    }
 
     /// <summary>
     ///   //获取文件夹下所有jpg/png图片路径，并把图片转换为sprite，存进指定的集合
@@ -187,19 +175,21 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
                 {
                     cardInfo.clipPath = $"{Application.dataPath}/Resources/Music/clips/{infos[5].Replace("\"", "")}";
                 }
-                CardInfoDicts.Add(pathname, cardInfo);
                 string suffixName = pathname.Substring(pathname.Length - 3, 3);   //获取文件后缀名，用以判断是否为图片
                 suffixName = suffixName.ToLower();
                 Debug.Log(item + ">>>" + suffixName);
                 if (suffixName == "jpg" || suffixName == "png")
                 {
-                    string path = Path.Combine(Application.streamingAssetsPath, pathname);
+                    //string path = Path.Combine(Application.streamingAssetsPath, pathname);
                     Texture texture2D = bundle.LoadAsset<Texture>(pathname);
                     Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
                     tempSprite.name = pathname;
-                    Sprite_cards_list.Add(tempSprite);
+                    cardInfo.sprite = tempSprite;
+                    cardInfo.name = pathname;
+                    //Sprite_cards_list.Add(tempSprite);
                 }
 
+                CardInfoDicts.Add(pathname, cardInfo);
 
             }
         }
@@ -212,7 +202,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
     }
     private Dictionary<string, AssetBundle> loadedAssetBundles = new Dictionary<string, AssetBundle>();
 
-    public List<Sprite> Sprite_cards_list { get => sprite_cards_list; set => sprite_cards_list = value; }
+    //public List<Sprite> Sprite_cards_list { get => sprite_cards_list; set => sprite_cards_list = value; }
     public List<GameObject> Cards { get => cards; set => cards = value; }
     public Dictionary<string, CardInfo> CardInfoDicts { get => cardInfoDicts; set => cardInfoDicts = value; }
 
@@ -237,10 +227,12 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
 
     public class CardInfo
     {
+        public string name;
         public string cast;
         public string num;
         public string type;
         public string description;
         public string clipPath;
+        public Sprite sprite;
     }
 }

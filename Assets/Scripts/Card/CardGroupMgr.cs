@@ -3,11 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using static AssetsBundlesMgr;
 
 public enum CardPrefabType
 {
@@ -20,8 +22,9 @@ public enum CardPrefabType
 public class CardGroupMgr : MonoSingleton<CardGroupMgr>
 {
     private List<GameObject> cards = new List<GameObject>();
+    private Dictionary<string, CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
 
-    private List<Sprite> sprite_cards_list = new List<Sprite>();
+    //private List<Sprite> sprite_cards_list = new List<Sprite>();
 
     private bool isActive = false;
 
@@ -39,8 +42,9 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         {
             _startCardsbtn.interactable = false;
             yield return StartCoroutine(AssetsBundlesMgr.Instance.InitIE(CardPrefabType.Card,10));
-            sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
+            //sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
             cards = AssetsBundlesMgr.Instance.Cards;
+            cardInfoDicts = AssetsBundlesMgr.Instance.CardInfoDicts;
             RollCards();
             _startCardsbtn.interactable = true;
         }
@@ -97,10 +101,10 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
     void RollCards()
     {
         //¥Ú¬“À≥–Ú
-        Shuffle<Sprite>(sprite_cards_list);
+        //Shuffle<Sprite>(sprite_cards_list);
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = sprite_cards_list[i];
+            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = cardInfoDicts.ElementAt(i).Value.sprite;
             AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
             cards[i].gameObject.transform.DORotate(new Vector3(0,0,(i+1)*15),0.1f);
             cards[i].GetComponent<CardTurnOver>().StartFront();
