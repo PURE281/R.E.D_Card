@@ -29,8 +29,8 @@ namespace CSVToolKit {
 			}
 		}
 
-		public void AddContents() {
-			CSVParser.Instance.AddData(GetPath() + "/CSV Parser/Resources", "Data.csv", new List<string>{rollNoInputField.text, nameInputField.text});
+		public void AddContents(List<string> infoList) {
+			CSVParser.Instance.AddData(GetPath() + "/StreamingAssets", "Data.csv", infoList);
 			ReadCSVFile();
 		}
 
@@ -46,11 +46,5 @@ namespace CSVToolKit {
 			#endif
 		}
 
-		private static string GetiPhoneDocumentsPath()
-		{
-			string path = Application.dataPath.Substring(0, Application.dataPath.Length - 5);
-			path = path.Substring(0, path.LastIndexOf('/'));
-			return path + "/Documents";
-		}
 	}
 }

@@ -168,8 +168,8 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
                 string pathname = infos[0];
                 CardInfo cardInfo = new CardInfo();
                 cardInfo.cast = infos[1];
-                cardInfo.num = infos[2];
-                cardInfo.type = infos[3];
+                //cardInfo.value = infos[2];
+                //cardInfo.type = infos[3];
                 cardInfo.description = infos[4].Replace("\"", "");
                 if (infos.Length > 5 && !"".Equals(infos[5]))
                 {
@@ -184,7 +184,7 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
                     Texture texture2D = bundle.LoadAsset<Texture>(pathname);
                     Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
                     tempSprite.name = pathname;
-                    cardInfo.sprite = tempSprite;
+                    //cardInfo.sprite = tempSprite;
                     cardInfo.name = pathname;
                     //Sprite_cards_list.Add(tempSprite);
                 }
@@ -223,16 +223,5 @@ public class AssetsBundlesMgr : MonoSingleton<AssetsBundlesMgr>
         {
             UnloadAssetBundle(key);
         }
-    }
-
-    public class CardInfo
-    {
-        public string name;
-        public string cast;
-        public string num;
-        public string type;
-        public string description;
-        public string clipPath;
-        public Sprite sprite;
     }
 }

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,22 +7,39 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static AssetsBundlesMgr;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
-public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public enum CardType
 {
-    public string _cast;
-    public string _num;
-    public string _type;
-    public string _Description;
-    public string _clipPath;
+    Atk, AtkUp, AtkDown, DefUp, DefDown, Sleep, Cover, None
+}
+
+[Serializable]
+public class CardInfo
+{
+    public string id;
+    public string name;
+    public string cast;
+    public int value;
+    public CardType type;
+    public string description;
+    public string clipPath;
+    public string spritePath;
+}
+public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+{
+    public CardInfo _cardInfo;
     public int _index;
-    public Sprite _sprite;
-    public bool _isSelect;
 
     private GameObject _mainCanvas;
     public GameObject _cardDescPanel;
     public AudioSource _audioSource;
-    private RectTransform rectTransform; // 用于存储UI元素的RectTransform组件  
+    private RectTransform rectTransform; // 用于存储UI元素的RectTransform组件
+    private Transform _orignTrans;
+    private Transform _hightLightTrans;
+    private GameObject _cardFront;
+    private Sprite _cardPic;
+    
 
     private void Awake()
     {
@@ -30,38 +48,38 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
         _audioSource = GetComponent<AudioSource>();
         _audioSource.loop = false;
         _audioSource.playOnAwake = false;
+        _cardFront = this.transform.Find("CardFront").gameObject;
+        _orignTrans = this.transform.parent;
+        _hightLightTrans = this.transform.parent.parent.Find("CardPanel2");
         this.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
-            _isSelect = !_isSelect;
-            this.transform.parent.GetComponent<HorizontalLayoutGroup>().enabled = false;
-            this.transform.DOScale(new Vector3(1.2f, 1.2f), 0.5f);
-            this.transform.parent = _mainCanvas.transform.Find("PC/CardPanel2");
-            if (_clipPath != null)
+            if (_cardInfo.clipPath != null)
             {
-                StartCoroutine(playClip());
+                _audioSource.Play();
             }
         });
         rectTransform = GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
 
     }
 
-    IEnumerator playClip()
-    {
-
-        Debug.Log(this._Description);
-        WWW www = new WWW(this._clipPath);
-        yield return www;
-        _audioSource.clip = www.GetAudioClip();
-        _audioSource.Play();
-    }
     public void Init(CardInfo infos)
     {
-        this._cast = infos.cast;
-        this._num = infos.num;
-        this._type = infos.type;
-        this._Description = infos.description;
-        this._clipPath = infos.clipPath;
-        this._sprite = infos.sprite;
+        this._cardInfo = infos;
+        //加载图片
+        Texture texture2D = Resources.Load<Texture2D>($"UI/Cards/{infos.name}");
+        if (texture2D != null)
+        {
+            _cardPic = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
+            this._cardFront.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
+            AdjustImageToAspectFit(this._cardFront.transform.Find("Pic").GetComponent<Image>(), this._cardFront.GetComponent<RectTransform>());
+        }
+
+        //显示加载的数据
+        this._cardFront.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
+        this._cardFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
+        this._cardFront.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
+        this._audioSource.clip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
+
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -78,31 +96,49 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
 
         {
             rectTransform.position = globalMousePos;
-        }   
+        }
 
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // 转换当前UI元素的RectTransform到Canvas的坐标系中  
+        //将选中的点转换为Image区域内的本地点
+        //判断是否在手牌区域，是则恢复，不做处理
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_orignTrans.GetComponent<RectTransform>()
+            , eventData.position, null, out localPoint);
 
+        Vector2 pivot = _orignTrans.GetComponent<RectTransform>().pivot;
+        Vector2 normalizedLocal =
+            new Vector2(pivot.x + localPoint.x / _orignTrans.GetComponent<RectTransform>().sizeDelta.x
+            , pivot.y + localPoint.y / _orignTrans.GetComponent<RectTransform>().sizeDelta.y);
+        if ((normalizedLocal.x >= 0 && normalizedLocal.x <= 1) && ((normalizedLocal.y >= 0 && normalizedLocal.y <= 1)))
+        {
+            // 假设rectTransform是包含需要刷新布局的UI元素的RectTransform
+            this.Back2OriginPanel();
+            //LayoutRebuilder.ForceRebuildLayoutImmediate(_orignTrans.GetComponent<RectTransform>());
+            return;
+        }
+        //能到这里意味着玩家打出了牌，开始进行判定
+        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(this._cardInfo);
+
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(_orignTrans.GetComponent<RectTransform>());
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-
-
         _cardDescPanel.SetActive(true);
-        _cardDescPanel.GetComponentInChildren<Text>().text = this._Description;
-        _cardDescPanel.transform.Find("picframe/pic").GetComponent<Image>().sprite = _sprite;
+        _cardDescPanel.GetComponentInChildren<Text>().text = this._cardInfo.description;
+        _cardDescPanel.transform.Find("picframe/pic").GetComponent<Image>().sprite = this._cardPic;
         AdjustImageToAspectFit(_cardDescPanel.transform.Find("picframe/pic").GetComponent<Image>(), _cardDescPanel.transform.Find("picframe").GetComponent<RectTransform>());
+        this.ToHightlightPanel();
+    
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        this.transform.parent = _mainCanvas.transform.Find("PC/CardPanel");
-        this.transform.SetSiblingIndex(_index);
-        this.transform.DOScale(Vector3.one, 0.5f);
-        this.transform.parent.GetComponent<HorizontalLayoutGroup>().enabled = true;
+        this.Back2OriginPanel();
         _cardDescPanel.SetActive(false);
         //_cardDescPanel.GetComponentInChildren<Text>().text = null;
     }
@@ -135,4 +171,19 @@ public class CardItem : MonoSingleton<CardItem>, IBeginDragHandler, IDragHandler
         // 注意：如果你想要保持高度并调整宽度，只需交换width和height的计算即可  
     }
     #endregion
+
+    private void Back2OriginPanel()
+    {
+        this.transform.DOScale(1f, 0.3f);
+        this.transform.SetParent(_orignTrans);
+        this.transform.SetSiblingIndex(_index);
+        this.GetComponentInParent<HorizontalLayoutGroup>().enabled = true;
+    }
+
+    private void ToHightlightPanel()
+    {
+        this.transform.DOScale(1.2f, 0.3f);
+        this.GetComponentInParent<HorizontalLayoutGroup>().enabled = false;
+        this.transform.SetParent(_hightLightTrans);
+    }
 }

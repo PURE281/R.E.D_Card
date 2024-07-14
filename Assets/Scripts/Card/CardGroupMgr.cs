@@ -10,6 +10,7 @@ using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using static AssetsBundlesMgr;
+using static UnityEditor.PlayerSettings;
 
 public enum CardPrefabType
 {
@@ -104,8 +105,10 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         //Shuffle<Sprite>(sprite_cards_list);
         for (int i = 0; i < cards.Count; i++)
         {
-            cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>().sprite = cardInfoDicts.ElementAt(i).Value.sprite;
-            AdjustImageToAspectFit(cards[i].gameObject.transform.GetChild(0).GetChild(1).GetComponent<Image>(), cards[i].gameObject.transform.GetChild(0).GetComponent<RectTransform>());
+            //Texture texture2D = Resources.Load<Texture2D>($"UI/Cards/{infos.spritePath}");
+            //Sprite tempSprite = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
+            //this._cardFront.transform.Find("Pic").GetComponent<Image>().sprite = tempSprite;
+            //AdjustImageToAspectFit(this._cardFront.transform.Find("Pic").GetComponent<Image>(), this._cardFront.GetComponent<RectTransform>());
             cards[i].gameObject.transform.DORotate(new Vector3(0,0,(i+1)*15),0.1f);
             cards[i].GetComponent<CardTurnOver>().StartFront();
         }

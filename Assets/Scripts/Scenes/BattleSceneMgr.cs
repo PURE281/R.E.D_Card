@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -33,6 +34,7 @@ public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
         });
         getcardBtn.transform.SetParent(this._btnPanel);
         this._battleBtnList.Add(getcardBtn);
+
     }
 
 }
