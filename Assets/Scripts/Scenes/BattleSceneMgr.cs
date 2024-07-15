@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static EnumMgr;
 
 public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
 {
@@ -22,8 +23,9 @@ public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
             this.GetComponent<BattleSystemMgr>().SwitchBattleType(BattleType.EnermyTurn);
         });
         pullCardBtn.transform.SetParent(this._btnPanel);
+        pullCardBtn.transform.localPosition = Vector3.zero;
         this._battleBtnList.Add(pullCardBtn);
-
+        
         ///添加抽卡的监听事件
         Button getcardBtn = Instantiate(temBtn);
         getcardBtn.name = "GetcardBtn";
@@ -33,6 +35,7 @@ public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
             this.GetComponent<BattleSystemMgr>().GetCard();
         });
         getcardBtn.transform.SetParent(this._btnPanel);
+        getcardBtn.transform.localPosition = Vector3.zero;
         this._battleBtnList.Add(getcardBtn);
 
     }

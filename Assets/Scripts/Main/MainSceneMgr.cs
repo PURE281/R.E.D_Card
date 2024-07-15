@@ -59,7 +59,7 @@ public class MainSceneMgr : MonoSingleton<MainSceneMgr>
 
     public void ToMainScene()
     {
-        AssetsBundlesMgr.Instance?.UnloadAllAssetBundles();
+        //AssetsBundlesMgr.Instance?.UnloadAllAssetBundles();
         SceneManager.LoadScene("MainScene");
     }
 

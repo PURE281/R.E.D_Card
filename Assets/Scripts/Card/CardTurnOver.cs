@@ -1,14 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;//别忘了引用
+using DG.Tweening;
+using static EnumMgr;//别忘了引用
 
-//卡牌状态，正面、背面
-public enum CardState
-{
-    Front,
-    Back
-}
 public class CardTurnOver : MonoSingleton<CardTurnOver>
 {
     public GameObject mFront;//卡牌正面

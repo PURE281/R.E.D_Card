@@ -2,17 +2,14 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static AssetsBundlesMgr;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
+using static EnumMgr;
 
-public enum CardType
-{
-    Atk, AtkUp, AtkDown, DefUp, DefDown, Sleep, Cover, None
-}
+
 
 [Serializable]
 public class CardInfo
@@ -37,7 +34,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private RectTransform rectTransform; // 用于存储UI元素的RectTransform组件
     private Transform _orignTrans;
     private Transform _hightLightTrans;
-    private GameObject _cardFront;
+    private GameObject _cardGo;
     private Sprite _cardPic;
     
 
@@ -48,17 +45,17 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         _audioSource = GetComponent<AudioSource>();
         _audioSource.loop = false;
         _audioSource.playOnAwake = false;
-        _cardFront = this.transform.Find("CardFront").gameObject;
-        _orignTrans = this.transform.parent;
-        _hightLightTrans = this.transform.parent.parent.Find("CardPanel2");
-        this.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
+        _cardGo = this.transform.parent.gameObject;
+        _orignTrans = _mainCanvas.transform.Find("PC/CardGroup/Panel");
+        _hightLightTrans = _mainCanvas.transform.Find("PC/CardGroup2");
+        this.GetComponent<Button>().onClick.AddListener(() =>
         {
             if (_cardInfo.clipPath != null)
             {
                 _audioSource.Play();
             }
         });
-        rectTransform = GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
+        rectTransform = transform.parent.GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
 
     }
 
@@ -70,21 +67,21 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (texture2D != null)
         {
             _cardPic = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
-            this._cardFront.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
-            AdjustImageToAspectFit(this._cardFront.transform.Find("Pic").GetComponent<Image>(), this._cardFront.GetComponent<RectTransform>());
+            this.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
+            AdjustImageToAspectFit(this.transform.Find("Pic").GetComponent<Image>(), this.GetComponent<RectTransform>());
         }
 
         //显示加载的数据
-        this._cardFront.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
-        this._cardFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
-        this._cardFront.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
+        this.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
+        this.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
+        this.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
         this._audioSource.clip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
 
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-
+        _cardDescPanel.SetActive(false);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -95,6 +92,10 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         eventData.pressEventCamera, out globalMousePos))
 
         {
+            // 限制位置  
+            globalMousePos.x = Mathf.Clamp(globalMousePos.x, 0, _mainCanvas.GetComponent<RectTransform>().rect.width);
+            globalMousePos.y = Mathf.Clamp(globalMousePos.y, 0, _mainCanvas.GetComponent<RectTransform>().rect.height);
+
             rectTransform.position = globalMousePos;
         }
 
@@ -121,13 +122,14 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             return;
         }
         //能到这里意味着玩家打出了牌，开始进行判定
-        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(this._cardInfo);
+        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(_cardGo);
 
         //LayoutRebuilder.ForceRebuildLayoutImmediate(_orignTrans.GetComponent<RectTransform>());
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        _index = _cardGo.transform.GetSiblingIndex();
         _cardDescPanel.SetActive(true);
         _cardDescPanel.GetComponentInChildren<Text>().text = this._cardInfo.description;
         _cardDescPanel.transform.Find("picframe/pic").GetComponent<Image>().sprite = this._cardPic;
@@ -174,16 +176,29 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     private void Back2OriginPanel()
     {
-        this.transform.DOScale(1f, 0.3f);
-        this.transform.SetParent(_orignTrans);
-        this.transform.SetSiblingIndex(_index);
-        this.GetComponentInParent<HorizontalLayoutGroup>().enabled = true;
+        this._cardGo.transform.DOScale(1f, 0.3f);
+        this._cardGo.transform.SetParent(_orignTrans);
+        this._cardGo.transform.SetSiblingIndex(_index);
+        this._orignTrans.GetComponent<HorizontalLayoutGroup>().enabled = true;
     }
 
     private void ToHightlightPanel()
     {
-        this.transform.DOScale(1.2f, 0.3f);
-        this.GetComponentInParent<HorizontalLayoutGroup>().enabled = false;
-        this.transform.SetParent(_hightLightTrans);
+        this._cardGo.transform.DOScale(1.2f, 0.3f);
+        this._orignTrans.GetComponent<HorizontalLayoutGroup>().enabled = false;
+        this._cardGo.transform.SetParent(_hightLightTrans);
+    }
+
+    public void Disappear()
+    {
+        StartCoroutine(DisappearIE());
+    }
+    IEnumerator DisappearIE()
+    {
+        this._cardGo.transform.DOScale(1.2f, 0.3f);
+        this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        Destroy(this._cardGo);
+        this._orignTrans.transform.GetComponent<HorizontalLayoutGroup>().enabled = true;
     }
 }

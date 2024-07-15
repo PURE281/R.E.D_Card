@@ -6,6 +6,6 @@ public class CardSceneMgr : MonoSingleton<CardSceneMgr>
 {
     private void Awake()
     {
-        StartCoroutine(CardGroupMgr.Instance?.InitCarddScene());
+        //StartCoroutine(CardGroupMgr.Instance?.InitCarddScene());
     }
 }

@@ -5,31 +5,25 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using static AssetsBundlesMgr;
+using static EnumMgr;
 using static System.Net.Mime.MediaTypeNames;
 using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
-public enum BattleType
-{
-    Init,
-    PlayerTurn,
-    EnermyTurn,
-    Winner,
-    Lose,
-    End
-}
 /// <summary>
 /// 回合制对战系统的管理脚本
 /// </summary>
 public class BattleSystemMgr : MonoBehaviour
 {
-    private List<GameObject> cards = new List<GameObject>();
+    public List<GameObject> cards = new List<GameObject>();
 
     //private List<Sprite> sprite_cards_list = new List<Sprite>();
 
-    private Dictionary<string,CardInfo> cardinfos = new Dictionary<string,CardInfo>();
-    
+    private Dictionary<string, CardInfo> cardinfos = new Dictionary<string, CardInfo>();
+
     private BattleType _battleType = BattleType.Init;
+
+    public PlayerInfo _playerInfo;
+    public EnermyInfo _enermyInfo;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,11 +47,12 @@ public class BattleSystemMgr : MonoBehaviour
         //加载卡片信息
         yield return CreateCardGo(3);
         yield return null;
-        for (int i = cards.Count - 1; i >= cards.Count-3; i--)
+        for (int i = cards.Count - 1; i >= cards.Count - 3; i--)
         {
             cards[i].GetComponent<CardTurnOver>().StartFront();
-            cards[i].AddComponent<CardItem>();
-            cards[i].GetComponent<CardItem>()._index = i;
+            Transform _cardFront = cards[i].transform.Find("CardFront");
+            _cardFront.AddComponent<CardItem>();
+            //_cardFront.GetComponent<CardItem>()._index = i;
             CardInfo cardInfo = new CardInfo();
             cardInfo.id = cardinfos.ElementAt(i).Value.id;
             cardInfo.name = cardinfos.ElementAt(i).Value.name;
@@ -67,15 +62,14 @@ public class BattleSystemMgr : MonoBehaviour
             cardInfo.description = cardinfos.ElementAt(i).Value.description;
             cardInfo.clipPath = cardinfos.ElementAt(i).Value.clipPath;
             cardInfo.spritePath = cardinfos.ElementAt(i).Value.spritePath;
-            cards[i].GetComponent<CardItem>().Init(cardInfo);
+            _cardFront.GetComponent<CardItem>().Init(cardInfo);
             //cardinfos.Remove(cardinfos.ElementAt(i).Key);
         }
     }
-    IEnumerator InitBattleScene()
+    IEnumerator InitBattleCard()
     {
         yield return StartCoroutine(CreateCardGo(5));
-        //sprite_cards_list = AssetsBundlesMgr.Instance.Sprite_cards_list;
-        cardinfos = CsvManager.Instance?.ReadCardInfoCSVFile("CardData.csv");
+        cardinfos = CsvManager.Instance?.ReadCardInfoCSVFile();
 
         // 步骤1: 将Dictionary的键值对添加到列表中  
         List<KeyValuePair<string, CardInfo>> cardList = cardinfos.ToList();
@@ -89,18 +83,19 @@ public class BattleSystemMgr : MonoBehaviour
         for (int i = 0; i < cards.Count; i++)
         {
             cards[i].GetComponent<CardTurnOver>().StartFront();
-            cards[i].AddComponent<CardItem>();
-            cards[i].GetComponent<CardItem>()._index = i;
+            Transform _cardFront = cards[i].transform.Find("CardFront");
+            _cardFront.AddComponent<CardItem>();
+            //_cardFront.GetComponent<CardItem>()._index = i;
             CardInfo cardInfo = new CardInfo();
             cardInfo.id = cardinfos.ElementAt(i).Value.id;
             cardInfo.name = cardinfos.ElementAt(i).Value.name;
             cardInfo.cast = cardinfos.ElementAt(i).Value.cast;
-            cardInfo.value= cardinfos.ElementAt(i).Value.value; 
-            cardInfo.type= (cardinfos.ElementAt(i).Value.type);
+            cardInfo.value = cardinfos.ElementAt(i).Value.value;
+            cardInfo.type = (cardinfos.ElementAt(i).Value.type);
             cardInfo.description = cardinfos.ElementAt(i).Value.description;
             cardInfo.clipPath = cardinfos.ElementAt(i).Value.clipPath;
             cardInfo.spritePath = cardinfos.ElementAt(i).Value.spritePath;
-            cards[i].GetComponent<CardItem>().Init(cardInfo);
+            _cardFront.GetComponent<CardItem>().Init(cardInfo);
             //cardinfos.Remove(cardinfos.ElementAt(i).Key);
         }
     }
@@ -121,9 +116,6 @@ public class BattleSystemMgr : MonoBehaviour
             shuffledCardDict.Add(kvp.Key, kvp.Value);
         }
 
-        // 现在 shuffledCardDict 包含与 cardList 相同的键值对，但顺序是随机的（在 Dictionary 的上下文中，这实际上没有意义）  
-
-        // 如果你想要用新的 Dictionary 替换旧的，你可以这样做：  
         cardinfos = shuffledCardDict;
     }
 
@@ -133,7 +125,9 @@ public class BattleSystemMgr : MonoBehaviour
         {
             case BattleType.Init:
                 //初始化卡牌
-                StartCoroutine(InitBattleScene());
+                StartCoroutine(InitBattleCard());
+                //初始化双方信息
+                InitPlayerInfo();
                 break;
             case BattleType.PlayerTurn:
                 //进行血量判断
@@ -153,7 +147,14 @@ public class BattleSystemMgr : MonoBehaviour
                 break;
         }
     }
+    private void InitPlayerInfo()
+    {
+        //从本地读取数据
 
+        Dictionary<int, CharacterInfo> characterDicts = CsvManager.Instance?.ReadCharacterInfoCSVFile();
+        _playerInfo = (PlayerInfo)characterDicts[0];
+        _enermyInfo = (EnermyInfo)characterDicts[1];
+    }
     public IEnumerator CreateCardGo(int cardMax)
     {
         string assetsName = "BattleCard";
@@ -162,15 +163,15 @@ public class BattleSystemMgr : MonoBehaviour
         {
             GameObject gameObject1 = Instantiate(cardGo);
             yield return new WaitForSeconds(0.5f);
-            gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardPanel"));
+            gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardGroup/Panel"));
             gameObject1.transform.localScale = Vector3.one;
             cards.Add(gameObject1);
         }
     }
-    public PlayerInfo _playerInfo;
-    public EnermyInfo _enermyInfo;
-    public void HandleCard(CardInfo cardInfo)
+    public void HandleCard(GameObject cardGo)
     {
+        CardItem cardItem = cardGo.GetComponentInChildren<CardItem>();
+        CardInfo cardInfo = cardItem._cardInfo;
         switch (cardInfo.type)
         {
             case CardType.Atk:
@@ -211,21 +212,29 @@ public class BattleSystemMgr : MonoBehaviour
                 Debug.Log(log);
                 //text.text = log;
                 break;
+            case CardType.Cover:
+                _playerInfo._curHP += cardInfo.value;
+                log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
+                break;
             case CardType.None:
                 log = $"玩家使用卡片....无事发生";
                 Debug.Log(log);
                 //text.text = log;
                 break;
         }
+        //调用卡牌自己的消失功能
+        cardItem.Disappear();
+        cardinfos.Remove(cardInfo.id);
     }
 }
 [Serializable]
-public class PlayerInfo
+public class CharacterInfo
 {
     public int _id;
     public string _name;
     public string _description;
     public int _level;
+    public int _type;
     public int _maxHP;
     public int _curHP;
     public int _oriAtk;
@@ -234,16 +243,10 @@ public class PlayerInfo
     public int _curDef;
 }
 [Serializable]
-public class EnermyInfo
+public class PlayerInfo : CharacterInfo
 {
-    public int _id;
-    public string _name;
-    public string _description;
-    public int _level;
-    public int _maxHP;
-    public int _curHP;
-    public int _oriAtk;
-    public int _curAtk;
-    public int _oriDef;
-    public int _curDef;
+}
+[Serializable]
+public class EnermyInfo : CharacterInfo
+{
 }
