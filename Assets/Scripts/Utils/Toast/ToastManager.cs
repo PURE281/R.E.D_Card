@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ToastManager : MonoSingleton<ToastManager>
 {
+
+
     public GameObject ToastPrefab;
     public List<ToastHandler> ToastList = new List<ToastHandler>();
 

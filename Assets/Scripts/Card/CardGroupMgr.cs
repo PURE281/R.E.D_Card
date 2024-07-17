@@ -18,7 +18,7 @@ using static UnityEditor.PlayerSettings;
 public class CardGroupMgr : MonoSingleton<CardGroupMgr>
 {
     private List<GameObject> cards = new List<GameObject>();
-    private Dictionary<string, CardInfo> cardInfoDicts = new Dictionary<string, CardInfo>();
+    private Dictionary<string, CardInfoBean> cardInfoDicts = new Dictionary<string, CardInfoBean>();
 
     //private List<Sprite> sprite_cards_list = new List<Sprite>();
 

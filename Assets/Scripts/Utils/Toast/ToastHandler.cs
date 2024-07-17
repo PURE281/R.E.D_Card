@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class ToastHandler : MonoSingleton<ToastHandler>
+public class ToastHandler : MonoBehaviour
 {
     public Image image;
     public Text text;
@@ -33,11 +33,11 @@ public class ToastHandler : MonoSingleton<ToastHandler>
 
     public void FadeOut(System.Action callback)
     {
-        image.DOFade(0, 2).OnComplete(() => {
+        image.DOFade(0, 3).OnComplete(() => {
             callback.Invoke();
             Destroy(gameObject);
         });
-        text.DOFade(0, 2);
+        text.DOFade(0, 3);
     }
 
     //∂—µ˛œÚ…œ“∆∂Ø
