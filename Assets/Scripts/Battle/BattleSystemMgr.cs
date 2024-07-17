@@ -46,7 +46,6 @@ public class BattleSystemMgr : MonoBehaviour
     {
         //加载卡片信息
         yield return CreateCardGo(3);
-        yield return null;
         for (int i = cards.Count - 1; i >= cards.Count - 3; i--)
         {
             cards[i].GetComponent<CardTurnOver>().StartFront();
@@ -68,7 +67,6 @@ public class BattleSystemMgr : MonoBehaviour
     }
     IEnumerator InitBattleCard()
     {
-        yield return StartCoroutine(CreateCardGo(5));
         cardinfos = CsvManager.Instance?.ReadCardInfoCSVFile();
 
         // 步骤1: 将Dictionary的键值对添加到列表中  
@@ -76,6 +74,7 @@ public class BattleSystemMgr : MonoBehaviour
 
         // 步骤2: 随机打乱列表  
         ShuffleList(cardList);
+        yield return StartCoroutine(CreateCardGo(5));
         RollCards();
     }
     void RollCards()
