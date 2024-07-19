@@ -23,7 +23,11 @@ public class CsvManager : Singleton<CsvManager>
             cardInfo.cast = data[i][4];
             cardInfo.description = data[i][5];
             cardInfo.spritePath = data[i][6];
-            cardInfo.clipPath = data[i][7].Replace("\r", "");
+            cardInfo.clipPath = data[i][7];
+            cardInfo.upgrade_id = data[i][8];
+            cardInfo.combo_id = data[i][9];
+            cardInfo.fusion_id = data[i][10];
+            cardInfo.proficiency = data[i][11].Replace("\r", "");
             keyValuePairs.Add(cardInfo.id, cardInfo);
         }
         return keyValuePairs;

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static EnumMgr;
+using Sequence = DG.Tweening.Sequence;
 
 
 
@@ -175,6 +176,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         this._cardGo.transform.DOScale(1.2f, 0.3f);
         this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
         yield return new WaitForSeconds(0.5f);
+        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.parent.gameObject);
         Destroy(this._cardGo);
     }
 
@@ -185,9 +187,11 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (_isSelected)
         {
             this.OpenMenu();
+            this.transform.DOLocalMoveY(30, 0.2f);
         }
         else
         {
+            this.transform.DOLocalMoveY(-30, 0.2f);
             this.CloseMenu();
         }
         if (_cardInfo.clipPath != null)
@@ -215,6 +219,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public void ShowUpdadteCard()
     {
         _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        //升级的话需要更新熟练度
     }
 
     public void CloseUpdadteCard()
@@ -223,7 +228,17 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     }
     void UpdadteCard()
     {
-        Debug.Log("升级卡片");
+        //Debug.Log("升级卡片");
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(() =>
+        {
+            this.transform.DOScale(1.2f, 0.2f);
+
+        }).AppendInterval(0.2f).AppendCallback(() =>
+        {
+            this.transform.DOScale(1f, 0.2f);
+        });
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_UPDATE_CARDS, this.gameObject);
     }
 
     public void ShowComboCard()
@@ -238,6 +253,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     void ComboCard()
     {
         Debug.Log("打出连携");
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_COMBO_CARDS, this.gameObject);
     }
     public void ShowFusionCard()
     {
@@ -251,5 +267,6 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     void FusionCard()
     {
         Debug.Log("融合卡");
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_FUSION_CARDS, this.gameObject);
     }
 }

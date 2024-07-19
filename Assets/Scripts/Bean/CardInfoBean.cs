@@ -19,4 +19,5 @@ public class CardInfoBean
     public string upgrade_id;
     public string combo_id;
     public string fusion_id;
+    public string proficiency;
 }

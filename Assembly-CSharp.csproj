@@ -59,9 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CreateNewTypeAtRuntimeExample\Scripts\CreateNewTypeAtRuntimeExample.cs" />
+    <Compile Include="Assets\Scripts\Utils\EventCenter.cs" />
     <Compile Include="Assets\Scripts\Utils\EnumMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\RandomElementsSystemExample3.cs" />
     <Compile Include="Assets\Scripts\Card\CardGroupMgr.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleUIMgr.cs" />
     <Compile Include="Assets\Scripts\Scenes\CardSceneMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\SelectiveExample\Scripts\SelectiveExample.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleSystemMgr.cs" />
@@ -69,12 +71,15 @@
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MinMaxRandomColorUnmutableAlpha\MinMaxRandomColorImmutableAlpha.cs" />
     <Compile Include="Assets\Scripts\Card\CardItem.cs" />
+    <Compile Include="Assets\Scripts\Utils\Events\CustomEvent.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\MyNewClassType.cs" />
     <Compile Include="Assets\Scripts\Utils\MonoSingleton.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\DefaultApproachExample2.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewEnumType\RandomMyNewEnumType.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\DefaultApproachExample3.cs" />
+    <Compile Include="Assets\Scripts\Utils\Toast\ToastHandler.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\MinMaxExample\Scripts\MinMaxExample.cs" />
+    <Compile Include="Assets\Scripts\Utils\Toast\ToastManager.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\OnGeneratedEventExample\Scripts\OnGeneratedEventExample.cs" />
     <Compile Include="Assets\Scripts\Utils\CsvManager.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\CompareWithDefaultApproachExample4.cs" />
@@ -85,8 +90,10 @@
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\SelectiveRandomWeightMinMaxRandomInt.cs" />
     <Compile Include="Assets\Scripts\Card\CardTurnOver.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\WeightPropertyMinMaxRandomInt.cs" />
+    <Compile Include="Assets\Scripts\Utils\PictureMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\WeightPropertyMyNewClassType.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\NewTypesExample.cs" />
+    <Compile Include="Assets\Scripts\Bean\CardInfoBean.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\InitializeAtRuntimeExample\Scripts\InitializeAtRuntimeExample.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\CompareWithDefaultApproachExample1.cs" />
     <Compile Include="Assets\Scripts\CSV Parser\CSVParser.cs" />
@@ -95,13 +102,6 @@
     <Compile Include="Assets\Scripts\Utils\CheckPlatform.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\GeneralExample\Scripts\GeneralExample.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\SelectiveRandomWeightMyNewClassType.cs" />
-    <Compile Include="Assets\Scripts\Battle\BattleUIMgr.cs" />
-    <Compile Include="Assets\Scripts\Utils\Toast\ToastHandler.cs" />
-    <Compile Include="Assets\Scripts\Utils\Toast\ToastManager.cs" />
-    <Compile Include="Assets\Scripts\Utils\EventCenter.cs" />
-    <Compile Include="Assets\Scripts\Utils\Events\CustomEvent.cs" />
-    <Compile Include="Assets\Scripts\Utils\PictureMgr.cs" />
-    <Compile Include="Assets\Scripts\Bean\CardInfoBean.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

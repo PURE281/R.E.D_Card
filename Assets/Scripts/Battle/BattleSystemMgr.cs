@@ -59,20 +59,12 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         yield return CreateCardGo(3);
         for (int i = CardsInHand.Count - 1; i >= CardsInHand.Count - 3; i--)
         {
+            int _temIndex = new MinMaxRandomInt(0, cardinfos.Count - 1).GetRandomValue();
             CardsInHand[i].GetComponent<CardTurnOver>().StartFront();
             Transform _cardFront = CardsInHand[i].transform.Find("CardFront");
             _cardFront.AddComponent<CardItem>();
-            //_cardFront.GetComponent<CardItem>()._index = i;
-            CardInfoBean cardInfo = new CardInfoBean();
-            cardInfo.id = cardinfos.ElementAt(i).Value.id;
-            cardInfo.name = cardinfos.ElementAt(i).Value.name;
-            cardInfo.cast = cardinfos.ElementAt(i).Value.cast;
-            cardInfo.value = cardinfos.ElementAt(i).Value.value;
-            cardInfo.type = (cardinfos.ElementAt(i).Value.type);
-            cardInfo.description = cardinfos.ElementAt(i).Value.description;
-            cardInfo.clipPath = cardinfos.ElementAt(i).Value.clipPath;
-            cardInfo.spritePath = cardinfos.ElementAt(i).Value.spritePath;
-            _cardFront.GetComponent<CardItem>().Init(cardInfo);
+            CardInfoBean cardInfoBean = CreateCardInfoBean(cardinfos.ElementAt(_temIndex).Value);
+            _cardFront.GetComponent<CardItem>().Init(cardInfoBean);
             //cardinfos.Remove(cardinfos.ElementAt(i).Key);
         }
     }
@@ -97,19 +89,30 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             CardsInHand[i].GetComponent<CardTurnOver>().StartFront();
             Transform _cardFront = CardsInHand[i].transform.Find("CardFront");
             _cardFront.AddComponent<CardItem>();
+            CardInfoBean cardInfoBean = CreateCardInfoBean(cardinfos.ElementAt(_temIndex).Value);
             //_cardFront.GetComponent<CardItem>()._index = i;
-            CardInfoBean cardInfo = new CardInfoBean();
-            cardInfo.id = cardinfos.ElementAt(_temIndex).Value.id;
-            cardInfo.name = cardinfos.ElementAt(_temIndex).Value.name;
-            cardInfo.cast = cardinfos.ElementAt(_temIndex).Value.cast;
-            cardInfo.value = cardinfos.ElementAt(_temIndex).Value.value;
-            cardInfo.type = (cardinfos.ElementAt(_temIndex).Value.type);
-            cardInfo.description = cardinfos.ElementAt(_temIndex).Value.description;
-            cardInfo.clipPath = cardinfos.ElementAt(_temIndex).Value.clipPath;
-            cardInfo.spritePath = cardinfos.ElementAt(_temIndex).Value.spritePath;
-            _cardFront.GetComponent<CardItem>().Init(cardInfo);
+            _cardFront.GetComponent<CardItem>().Init(cardInfoBean);
             //cardinfos.Remove(cardinfos.ElementAt(i).Key);
         }
+    }
+
+    CardInfoBean CreateCardInfoBean(CardInfoBean bean)
+    {
+
+        CardInfoBean cardInfo = new CardInfoBean();
+        cardInfo.id = bean.id;
+        cardInfo.name = bean.name;
+        cardInfo.cast = bean.cast;
+        cardInfo.value = bean.value;
+        cardInfo.type = (bean.type);
+        cardInfo.description = bean.description;
+        cardInfo.clipPath = bean.clipPath;
+        cardInfo.spritePath = bean.spritePath;
+        cardInfo.upgrade_id = bean.upgrade_id;
+        cardInfo.combo_id = bean.combo_id;
+        cardInfo.fusion_id = bean.fusion_id;
+        cardInfo.proficiency = bean.proficiency;
+        return cardInfo;
     }
     void ShuffleList(List<KeyValuePair<string, CardInfoBean>> list)
     {
@@ -181,6 +184,10 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             CardsInHand.Add(gameObject1);
         }
     }
+    public void RemoveCardInHand(GameObject cardGo)
+    {
+        _cardsInHand.Remove(cardGo);
+    }
     public void HandleCard(GameObject cardGo)
     {
         CardItem cardItem = cardGo.GetComponentInChildren<CardItem>();
@@ -237,6 +244,17 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         }
         //调用卡牌自己的消失功能
         cardItem.Disappear();
+    }
+
+    public CardInfoBean LoadCardItemById(string id)
+    {
+        if (!cardinfos.ContainsKey(id))
+        {
+            Debug.LogError("找不到相应id的卡片信息");
+            return null;
+        }
+        CardInfoBean bean = cardinfos[id];
+        return bean;
     }
 }
 [Serializable]
