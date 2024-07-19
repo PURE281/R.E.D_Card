@@ -31,8 +31,11 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_COMBO_CARDS, ComboCards);
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_FUSION_CARDS, FusionCards);
     }
-    Dictionary<string, List<CardItem>> _selectedCardDicts = new Dictionary<string, List<CardItem>>();
-    List<CardItem> _temSelectedCardList = null;
+    List<CardItem> _temSelectedAllCardList = new List<CardItem>();
+    List<CardItem> _temSelectedUpgradeCardList = new List<CardItem>();
+    List<CardItem> _temSelectedComboCardList = new List<CardItem>();
+    List<CardItem> _temSelectedFusionList = new List<CardItem>();
+    List<CardItem> _temSelectedWinList = new List<CardItem>();
     /// <summary>
     /// 这里在每一次点击卡牌出列时需要执行的方法
     /// 用来检测出列的卡牌中是否有满足条件的，有满足条件的则开启相关的方法
@@ -40,28 +43,34 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
     /// </summary>
     void RefreshCards(object card)
     {
-        List<GameObject> cardsInHand = BattleSystemMgr.Instance?.CardsInHand;
-        List<CardItem> cardsSelected = new List<CardItem>();
-        _selectedCardDicts.Clear();
-        CardItem tem = null;
-        foreach (var item in cardsInHand)
+        //将每次选中的卡获取到,然后添加到集合中,对集合进行处理
+        GameObject curSelectedCard = (GameObject)card;
+        CardItem cardItem = curSelectedCard.GetComponent<CardItem>();
+        if (cardItem._isSelected)
         {
-            tem = item.GetComponentInChildren<CardItem>();
-            if (tem._isSelected)
+            if (!_temSelectedAllCardList.Contains(cardItem))
             {
-                cardsSelected.Add(item.GetComponentInChildren<CardItem>());
+                _temSelectedAllCardList.Add(cardItem);
             }
         }
-        //对选择的卡牌进行判定
-        var duplicates = cardsSelected.GroupBy(x => x._cardInfo.id);
-        int _sameCardNum = 0;
-        string _temCardId = "";
-        foreach (var group in duplicates)
+        else
         {
-            _temSelectedCardList = new List<CardItem>();
+            _temSelectedAllCardList.Remove(cardItem);
+        }
+        //对选择的卡牌进行判定
+        var groupByIdCardList = _temSelectedAllCardList.GroupBy(x => x._cardInfo.id);
+        int _sameCardNum = 0;
+        foreach (var group in groupByIdCardList)
+        {
             foreach (var item in group)
             {
-                _temCardId = item._cardInfo.id;
+                if (cardItem._cardInfo.id==item._cardInfo.id)
+                {
+                    if (!_temSelectedUpgradeCardList.Contains(item))
+                    {
+                        _temSelectedUpgradeCardList.Add((CardItem)item);
+                    }
+                }
                 if (_sameCardNum >= 1)
                 {
                     Debug.Log("相同，可升星");
@@ -72,10 +81,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
                     item.CloseUpdadteCard();
                 }
                 _sameCardNum++;
-
-                _temSelectedCardList.Add(item);
             }
-            _selectedCardDicts.Add(_temCardId, _temSelectedCardList);
             _sameCardNum = 0;
         }
     }
@@ -88,16 +94,17 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         if (tem2UpgradeCard == null) { Debug.LogError("请检查传入的对象"); return; }
         string id = tem2UpgradeCard.GetComponent<CardItem>()._cardInfo.id;
         string upgradeid = tem2UpgradeCard.GetComponent<CardItem>()._cardInfo.upgrade_id;
-        if (_selectedCardDicts.ContainsKey(id))
-        {
-            List<CardItem> list = _selectedCardDicts[id];
-            list[0].Disappear();
-            //Destroy(tem2UpgradeCard.transform.parent);
-            //在当前选中的卡片上覆盖新的信息
-            CardInfoBean newCardBean = BattleSystemMgr.Instance?.LoadCardItemById(upgradeid);
-            tem2UpgradeCard.GetComponent<CardItem>().Init(newCardBean);
-
-        }
+        //将最先选中的卡片进行献祭销毁，将新的卡片覆盖到点击升级的这张卡片上
+        _temSelectedAllCardList.Remove(_temSelectedAllCardList[0]);
+        _temSelectedUpgradeCardList[0].Disappear();
+        BattleSystemMgr.Instance?.RemoveCardInHand(_temSelectedUpgradeCardList[0].transform.parent.gameObject);
+        _temSelectedUpgradeCardList.Remove(_temSelectedUpgradeCardList[0]);
+        //根据父级id在battlesystem脚本中读取到对应的卡片信息
+        CardInfoBean newCardBean = BattleSystemMgr.Instance?.LoadCardItemById(upgradeid);
+        //覆盖原有的卡片信息
+        tem2UpgradeCard.GetComponent<CardItem>().Init(newCardBean);
+        tem2UpgradeCard.GetComponent<CardItem>().CloseUpdadteCard();
+        this.RefreshCards(tem2UpgradeCard);
     }
     void ComboCards(object card)
     {

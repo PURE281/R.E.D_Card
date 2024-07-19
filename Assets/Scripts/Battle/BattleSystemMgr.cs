@@ -32,7 +32,7 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
 
     public PlayerInfo _playerInfo;
     public EnermyInfo _enermyInfo;
-
+    [SerializeField]
     public List<GameObject> CardsInHand { get => _cardsInHand; }
 
     // Start is called before the first frame update

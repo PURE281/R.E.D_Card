@@ -167,23 +167,22 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void Disappear()
     {
-        StartCoroutine(DisappearIE());
-    }
-    IEnumerator DisappearIE()
-    {
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
-        //this._orignTrans.transform.GetComponent<HorizontalLayoutGroup>().enabled = true;
-        this._cardGo.transform.DOScale(1.2f, 0.3f);
-        this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
-        yield return new WaitForSeconds(0.5f);
-        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.parent.gameObject);
-        Destroy(this._cardGo);
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(() =>
+        {
+            this._cardGo.transform.DOScale(1.2f, 0.3f);
+            this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
+        }).AppendInterval(0.5f).AppendCallback(() =>
+        {
+            Destroy(this._cardGo);
+        });
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         _isSelected = !_isSelected;
-        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_REFRESH_CARDS);
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_REFRESH_CARDS, this.gameObject);
         if (_isSelected)
         {
             this.OpenMenu();
@@ -191,7 +190,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
         else
         {
-            this.transform.DOLocalMoveY(-30, 0.2f);
+            this.transform.DOLocalMoveY(0, 0.2f);
             this.CloseMenu();
         }
         if (_cardInfo.clipPath != null)
