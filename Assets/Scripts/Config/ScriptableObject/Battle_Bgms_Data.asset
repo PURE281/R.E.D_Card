@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3327f5b88e462fb4e9cb16c8068da49e, type: 3}
+  m_Name: Battle_Bgms_Data
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: 36fafbbdd67abb64b8adf450d7a43d07, type: 3}
+  - {fileID: 8300000, guid: 1702f1595fc294b469ac9ed609b5d05e, type: 3}
+  - {fileID: 8300000, guid: e1bcebbc1f79e32489442f757ba640b7, type: 3}
+  - {fileID: 8300000, guid: 806181fdcce079a48b6076fdb1f1ccc5, type: 3}
+  - {fileID: 8300000, guid: 057aa93aa7222634e9e521f946f3f4f8, type: 3}
+  - {fileID: 8300000, guid: afaaea02856ff4647b45ccaa4ff529e8, type: 3}
+  - {fileID: 8300000, guid: 9e3dd8c1148ecf442ac1e490f98aef72, type: 3}
+  - {fileID: 8300000, guid: cf929be1ca459d14db814ada2a4fab34, type: 3}
+  - {fileID: 8300000, guid: b656e274e830ce84da9c9d897030671d, type: 3}
+  desc:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 

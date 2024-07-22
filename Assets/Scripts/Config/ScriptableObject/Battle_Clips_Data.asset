@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3327f5b88e462fb4e9cb16c8068da49e, type: 3}
+  m_Name: Battle_Clips_Data
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 8300000, guid: ba8abe287aefa6d4184e871a9f470544, type: 3}
+  - {fileID: 8300000, guid: 205a2d4413afa354ebdfa39a5f9a2abc, type: 3}
+  - {fileID: 8300000, guid: 9144eba4b0a838345951cdf8a7de3a1f, type: 3}
+  - {fileID: 8300000, guid: 9144eba4b0a838345951cdf8a7de3a1f, type: 3}
+  - {fileID: 8300000, guid: 9144eba4b0a838345951cdf8a7de3a1f, type: 3}
+  desc:
+  - "\u5361\u7247\u7FFB\u9875\u7684\u97F3\u6548"
+  - "\u62BD\u5230\u7A00\u6709\u5361\u7684\u97F3\u6548"
+  - "\u5347\u7EA7\u7684\u97F3\u6548"
+  - "\u5347\u7EA7\u7684\u97F3\u6548"
+  - "\u5347\u7EA7\u7684\u97F3\u6548"
