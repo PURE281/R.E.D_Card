@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// 这是用来管理抽卡的卡组的管理类

@@ -53,6 +53,7 @@ public class CardTurnOver : MonoSingleton<CardTurnOver>
     {
         isActive = true;
         mBack.transform.DORotate(new Vector3(0, 90, 0), mTime);
+        MusicManager.Instance?.PlayClipByIndex(0);
         for (float i = mTime; i >= 0; i -= Time.deltaTime)
             yield return 0;
         mFront.transform.DORotate(new Vector3(0, 0, 0), mTime);

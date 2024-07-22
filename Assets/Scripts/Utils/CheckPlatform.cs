@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class CheckPlatform : MonoBehaviour
 {
-    [DllImport("__Internal")]
-    private static extern int GetUA();
+    //[DllImport("__Internal")]
+    //private static extern int GetUA();
     public Text text;
     public GameObject _pcPanel;
     public GameObject _mobilePanel;

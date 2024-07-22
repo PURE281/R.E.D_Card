@@ -19,24 +19,25 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     //private GameObject _mainCanvas;//主canvas
     //public GameObject _cardDescPanel;//查看卡片详情
-    public AudioSource _audioSource;//音频播放器
+    public AudioClip _cardClip;//音频播放器
     //private RectTransform rectTransform; // 用于存储UI元素的RectTransform组件
     //private Transform _orignTrans;//原卡组父级
     //private Transform _hightLightTrans;//高亮卡组父级
-    private GameObject _cardGo;//卡片最父级
+    public GameObject _cardGo;//卡片最父级
     public Sprite _cardPic;//卡片图
 
     private GameObject _menuPanel;//显示卡片选项的panel
 
     public bool _isSelected = false;
+    public bool _isDestroy = false;
 
     private void Awake()
     {
         //_mainCanvas = GameObject.FindWithTag("MainCanvas");
         //_cardDescPanel = GameObject.FindWithTag("MainCanvas").transform.GetChild(1).GetChild(3).gameObject;
-        _audioSource = GetComponent<AudioSource>();
-        _audioSource.loop = false;
-        _audioSource.playOnAwake = false;
+        //_audioSource = GetComponent<AudioSource>();
+        //_audioSource.loop = false;
+        //_audioSource.playOnAwake = false;
         _cardGo = this.transform.parent.gameObject;
         //_orignTrans = _mainCanvas.transform.Find("PC/CardGroup/Panel");
         //_hightLightTrans = _mainCanvas.transform.Find("PC/CardGroup2");
@@ -81,7 +82,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         this.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
         this.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
         this.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
-        this._audioSource.clip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
+        this._cardClip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
 
     }
 
@@ -165,9 +166,11 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     #endregion
 
 
-    public void Disappear()
+    public void Disappear(Action action = null)
     {
+        _isDestroy = true;
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
+        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.parent.gameObject);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -175,7 +178,9 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
         }).AppendInterval(0.5f).AppendCallback(() =>
         {
-            Destroy(this._cardGo);
+            if (action!=null) { action(); }
+            
+            Destroy(this._cardGo.gameObject);
         });
     }
 
@@ -186,27 +191,27 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (_isSelected)
         {
             this.OpenMenu();
-            this.transform.DOLocalMoveY(30, 0.2f);
         }
         else
         {
-            this.transform.DOLocalMoveY(0, 0.2f);
             this.CloseMenu();
         }
-        if (_cardInfo.clipPath != null)
+        if (_cardClip != null)
         {
-            _audioSource.Play();
+            MusicManager.Instance?.PlayClipByClip(this._cardClip);
         }
     }
 
 
-    private void OpenMenu()
+    public void OpenMenu()
     {
+        this.transform.DOLocalMoveY(30, 0.2f);
         _menuPanel.SetActive(true);
         //需要查看手牌中是否有可以升级或者连携或者融合的相关牌
     }
-    private void CloseMenu()
+    public void CloseMenu()
     {
+        this.transform.DOLocalMoveY(0, 0.2f);
         _menuPanel.SetActive(false);
         //需要查看手牌中是否有可以升级或者连携或者融合的相关牌
     }
@@ -231,9 +236,11 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
-            this.transform.DOScale(1.2f, 0.2f);
+            this.transform.DOScale(1.3f, 0.5f);
+            MusicManager.Instance?.PlayClipByIndex(2);
 
-        }).AppendInterval(0.2f).AppendCallback(() =>
+
+        }).AppendInterval(0.5f).AppendCallback(() =>
         {
             this.transform.DOScale(1f, 0.2f);
         });
