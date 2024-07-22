@@ -139,7 +139,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         //_index = _cardGo.transform.GetSiblingIndex();
         //this.ToHightlightPanel();
 
-        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL, this.gameObject);
+        //EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL, this.gameObject);
 
     }
     public void OnPointerExit(PointerEventData eventData)
@@ -147,7 +147,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         //this.Back2OriginPanel();
         //_cardDescPanel.SetActive(false);
         //_cardDescPanel.GetComponentInChildren<Text>().text = null;
-        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL, this);
+        //EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL, this);
     }
     private void Back2OriginPanel()
     {
@@ -191,10 +191,12 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (_isSelected)
         {
             this.OpenMenu();
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL, this.gameObject);
         }
         else
         {
             this.CloseMenu();
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL, this.gameObject);
         }
         if (_cardClip != null)
         {

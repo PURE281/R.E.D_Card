@@ -16,14 +16,14 @@ public class MusicManager : MonoSingleton<MusicManager>
     {
         _clipsAudioSource = this.AddComponent<AudioSource>();
         _bgmSource = this.AddComponent<AudioSource>();
-        _bgmSource.clip = _bgmsData.clips[0];
+        _bgmSource.clip = _bgmsData?.clips[0];
         _bgmSource.Play();
         _bgmSource.loop = true;
     }
 
     public void PlayClipByIndex(int index)
     {
-        this._clipsAudioSource.clip = _clipsData.clips[index];
+        this._clipsAudioSource.clip = _clipsData?.clips[index];
         this._clipsAudioSource.Play();
     }
 

@@ -4,7 +4,7 @@ ID,Name,Type,Value,Cast,Desc,Sprite,ClipPath,Upgrade_id,Combo_id,Fusion_id,Profi
 3,jy04,0,5,5,比个耶，对敌方造成伤害,jy04.jpg,jy04.mp3,2,2,6,,
 4,jy05,4,5,3,偷感很强，降低敌方护甲,jy05.jpg,jy05.mp3,2,2,6,,
 5,jy06,7,0,1,你没事吧？无事发生,jy06.jpg,jy06.mp3,2,3,6,,
-6,jy07,0,5,5,我看谁敢造次！造成大量伤害,jy07.jpg,jy07.mp3,2,3,,,
+6,jy07,0,5,5,我看谁敢造次！造成大量伤害,jy07.jpg,jy07.mp3,2,3,6,,
 7,jy08,1,5,3,不嘻嘻，提升我方攻击力,jy08.jpg,jy08.mp3,2,4,,,
 8,jy09,1,5,3,嘻嘻，提升我方攻击力,jy09.jpg,jy09.mp3,2,4,,,
 9,lx01,0,5,5,美图，欣赏，造成大量伤害,lx01.jpg,lx01.mp3,2,5,,,

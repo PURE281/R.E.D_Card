@@ -32,16 +32,16 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         {
             BattleSystemMgr.Instance?.SwitchBattleType(BattleType.EnermyTurn);
         });
+        //_cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+        //{
+        //    this.ResetCards();
+        //    BattleSystemMgr.Instance?.GetCard();
+        //});
         _cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
-        {
-            this.ResetCards();
-            BattleSystemMgr.Instance?.GetCard();
-        });
-        _cardMenuGO.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
         {
             BattleSystemMgr.Instance?.ToMainScene();
         });
-        _cardMenuGO.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+        _cardMenuGO.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
         {
             //模拟敌方进攻结束
             BattleSystemMgr.Instance?.SwitchBattleType(BattleType.PlayerTurn);
@@ -292,6 +292,10 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
 
     void CloseCardDetail(object card)
     {
+        if (_temSelectedAllCardList.Count!=0)
+        {
+            return;
+        }
         _cardDetailGO.transform.DOScale(0, 0.5f);
         _cardDetailGO.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
         _cardDetailGO.SetActive(false);
@@ -305,14 +309,14 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
     private void ShowMenu(object data)
     {
         //this._cardMenuGO.SetActive(true);
-        if (BattleSystemMgr.Instance?.BattleType == BattleType.PlayerTurn)
-        {
-            this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = true;
-        }
-        else
-        {
-            this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = false;
-        }
+        //if (BattleSystemMgr.Instance?.BattleType == BattleType.PlayerTurn)
+        //{
+        //    this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = true;
+        //}
+        //else
+        //{
+        //    this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = false;
+        //}
     }
 
     private void CloseMenu(object data)

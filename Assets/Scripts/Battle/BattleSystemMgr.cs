@@ -40,7 +40,7 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
     {
         _battleType = BattleType.Init;
         SwitchBattleType(BattleType.Init);
-        SwitchBattleType(BattleType.PlayerTurn);
+        //SwitchBattleType(BattleType.PlayerTurn);
     }
 
     // Update is called once per frame
@@ -51,6 +51,12 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
 
     public void GetCard()
     {
+        if (_cardsInHand.Count > 5)
+        {
+            //说明不满足条件，不允许获取卡片
+            ToastManager.Instance?.CreatToast("请保证手牌不超过5张");
+            return;
+        }
         StartCoroutine(GetCardIE());
     }
     IEnumerator GetCardIE()
@@ -124,22 +130,31 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             case BattleType.PlayerTurn:
                 //显示菜单栏
                 EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_MENU);
+                //自动发牌
+                GetCard();
+                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
                 //进行血量判断
                 break;
             case BattleType.EnermyTurn:
+                //先判断手牌是否大于5张，是的话则需要进行卡牌的打出进行消耗
+                if (_cardsInHand.Count > 5)
+                {
+                    ToastManager.Instance?.CreatToast("手牌数量不能超过5张！");
+                    return;
+                }
                 //关闭菜单栏
                 EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_MENU);
                 //进行血量判断
                 Debug.Log("敌方回合");
                 break;
             case BattleType.Winner:
-                Debug.Log("Winner");
+                Debug.Log("player win");
                 break;
             case BattleType.Lose:
-                Debug.Log("win");
+                Debug.Log("player lose");
                 break;
             case BattleType.End:
-                Debug.Log("End");
+                Debug.Log("battle is over");
                 break;
         }
     }
@@ -164,7 +179,7 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             GameObject gameObject1 = Instantiate(cardGo);
             yield return new WaitForSeconds(0.5f);
             gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardGroup/Panel"));
-            gameObject1.transform.localScale = Vector3.one;
+            //gameObject1.transform.localScale = Vector3.one;
             //给预制体添加卡片信息
             int _temIndex = new MinMaxRandomInt(0, cardinfos.Count).GetRandomValue();
             gameObject1.GetComponent<CardTurnOver>().StartFront();
@@ -241,6 +256,24 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         //调用卡牌自己的消失功能
         cardItem.Disappear();
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+
+        //对敌我双方进行血量判断，查看当前是否满足胜利/失败条件
+        CheckIsWin();
+    }
+    void CheckIsWin()
+    {
+        if (_enermyInfo._curHP<=0)
+        {
+            //胜利
+            SwitchBattleType(BattleType.Winner);
+            return;
+        }
+        if (_playerInfo._curHP<=0)
+        {
+            //失败
+            SwitchBattleType(BattleType.Lose);
+            return;
+        }
     }
     public void HandleComboCards(List<GameObject> cardGos)
     {

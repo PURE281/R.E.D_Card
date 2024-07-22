@@ -14,5 +14,6 @@ public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
         this.AddComponent<BattleSystemMgr>();
         this.AddComponent<EventCenter>().Init();
         this.AddComponent<BattleUIMgr>();
+        Application.targetFrameRate = 120;
     }
 }

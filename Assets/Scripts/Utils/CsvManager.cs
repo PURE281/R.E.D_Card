@@ -11,7 +11,7 @@ public class CsvManager : Singleton<CsvManager>
     public Dictionary<string, CardInfoBean> ReadCardInfoCSVFile()
     {
         Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
-        List<List<string>> data = CSVParser.Instance.ReadData(GetPath() + "/StreamingAssets", "CardData.csv");
+        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CardData.csv");
         //for (int i = 1; i < data.Count - 1; i++)
         for (int i = 1; i < 10; i++)
         {
@@ -35,14 +35,14 @@ public class CsvManager : Singleton<CsvManager>
 
     public void AddContents(string fileName, List<string> infoList)
     {
-        CSVParser.Instance.AddData(GetPath() + "/StreamingAssets", fileName, infoList);
+        CSVParser.Instance.AddData("/StreamingAssets", fileName, infoList);
         //ReadCardInfoCSVFile(fileName);
     }
 
     public Dictionary<int, CharacterInfo> ReadCharacterInfoCSVFile()
     {
         Dictionary<int, CharacterInfo> keyValuePairs = new Dictionary<int, CharacterInfo>();
-        List<List<string>> data = CSVParser.Instance.ReadData(GetPath() + "/StreamingAssets", "CharacterData.csv");
+        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets","CharacterData.csv");
         for (int i = 1; i < data.Count - 1; i++)
         {
             switch (int.Parse(data[i][3]))
@@ -105,17 +105,5 @@ public class CsvManager : Singleton<CsvManager>
                 return CardType.None;
         }
         return CardType.None;
-    }
-    private static string GetPath()
-    {
-#if UNITY_EDITOR
-        return Application.dataPath;
-#elif UNITY_ANDROID
-			return Application.persistentDataPath;
-#elif UNITY_IPHONE
-			return GetiPhoneDocumentsPath();
-#else
-			return Application.dataPath;
-#endif
     }
 }
