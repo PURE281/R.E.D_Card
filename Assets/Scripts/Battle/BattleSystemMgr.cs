@@ -8,7 +8,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static EnumMgr;
-
+using DG.Tweening;
+using Sequence = DG.Tweening.Sequence;
 /// <summary>
 /// 回合制对战系统的管理脚本
 /// </summary>
@@ -25,13 +26,13 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
     /// </summary>
     private Dictionary<string, CardInfoBean> cardinfos = new Dictionary<string, CardInfoBean>();
 
-    //private Dic
 
     [SerializeField]
     private BattleType _battleType;
 
-    public PlayerInfo _playerInfo;
-    public EnermyInfo _enermyInfo;
+    private GameObject _enermyGo;
+    private GameObject _playerGo;
+
     public List<GameObject> CardsInHand { get => _cardsInHand; }
     public BattleType BattleType { get => _battleType; }
 
@@ -122,18 +123,23 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         switch (battleType)
         {
             case BattleType.Init:
-                //初始化卡牌
-                StartCoroutine(InitBattleCard());
                 //初始化双方信息
                 InitPlayerInfo();
+                //初始化卡牌
+                StartCoroutine(InitBattleCard());
                 break;
             case BattleType.PlayerTurn:
-                //显示菜单栏
-                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_MENU);
-                //自动发牌
-                GetCard();
-                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
-                //进行血量判断
+                Sequence sequence = DOTween.Sequence();
+                sequence.AppendInterval(0.5f)
+                .AppendCallback(() =>
+                {
+                    //显示菜单栏
+                    EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_MENU);
+                    //自动发牌
+                    GetCard();
+                    EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+                    //进行血量判断
+                });
                 break;
             case BattleType.EnermyTurn:
                 //先判断手牌是否大于5张，是的话则需要进行卡牌的打出进行消耗
@@ -142,35 +148,60 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
                     ToastManager.Instance?.CreatToast("手牌数量不能超过5张！");
                     return;
                 }
-                //关闭菜单栏
-                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_MENU);
                 //进行血量判断
                 Debug.Log("敌方回合");
+                //关闭菜单栏
+                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_MENU);
+                //添加延迟
+
+                //随机造成一定伤害
+                BattleEnermyInfo.Instance?.Attack(() =>
+                {
+                    SwitchBattleType(BattleType.PlayerTurn);
+                });
                 break;
             case BattleType.Winner:
+                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_PLAYER_WIN);
                 Debug.Log("player win");
                 break;
             case BattleType.Lose:
+                EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_PLAYER_LOSE);
                 Debug.Log("player lose");
                 break;
             case BattleType.End:
-                Debug.Log("battle is over");
+                Debug.Log("battle is over>>需要弹出重新还是下一局的选项");
                 break;
         }
     }
     private void InitPlayerInfo()
     {
         //从本地读取数据
-
-        Dictionary<int, CharacterInfo> characterDicts = CsvManager.Instance?.ReadCharacterInfoCSVFile();
-        _playerInfo = (PlayerInfo)characterDicts[0];
-        _enermyInfo = (EnermyInfo)characterDicts[1];
+        Dictionary<int, CharacterBean> characterDicts = CsvManager.Instance?.ReadCharacterInfoCSVFile();
+        //初始化角色go
+        GameObject _templayer = Resources.Load<GameObject>("Prefabs/BattlePlayerGo");
+        GameObject _temEnermy = Resources.Load<GameObject>("Prefabs/BattleEnermyGo");
+        _playerGo = Instantiate(_templayer);
+        _playerGo.transform.SetParent(GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("PC"));
+        _playerGo.transform.localPosition = Vector3.zero;
+        _playerGo.transform.SetAsFirstSibling();
+        _playerGo.name = "BattlePlayerGo";
+        _enermyGo = Instantiate(_temEnermy);
+        _enermyGo.transform.SetParent(GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("PC"));
+        _enermyGo.transform.SetAsFirstSibling();
+        _enermyGo.transform.localPosition = Vector3.zero;
+        _enermyGo.name = "BattleEnermyGo";
+        BattlePlayerBean battlePlayerBean = (BattlePlayerBean)characterDicts[0];
+        _playerGo.AddComponent<BattlePlayerInfo>();
+        _playerGo.GetComponent<BattlePlayerInfo>().InitInfo(battlePlayerBean);
+        BattleEnermyBean battleEnermyBean = (BattleEnermyBean)characterDicts[1];
+        _enermyGo.AddComponent<BattleEnermyInfo>();
+        _enermyGo.GetComponent<BattleEnermyInfo>().InitInfo(battleEnermyBean);
     }
     public IEnumerator CreateCardGo(int cardMax)
     {
         //执行完成之前不允许使用卡组
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_INACTIVATE_CARDSINHAND);
-        string assetsName = "BattleCard";
+        string assetsName = "BattleCard1";
         GameObject cardGo = Resources.Load<GameObject>($"Prefabs/{assetsName}");
         for (int i = 0; i < cardMax; i++)
         {
@@ -182,12 +213,12 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             //gameObject1.transform.localScale = Vector3.one;
             //给预制体添加卡片信息
             int _temIndex = new MinMaxRandomInt(0, cardinfos.Count).GetRandomValue();
-            gameObject1.GetComponent<CardTurnOver>().StartFront();
-            Transform _cardFront = gameObject1.transform.Find("CardFront");
-            _cardFront.AddComponent<CardItem>();
+            //Transform _cardFront = gameObject1.transform.Find("CardFront");
+            gameObject1.AddComponent<CardItem>();
+            gameObject1.GetComponent<CardItem>().StartFront();
             CardInfoBean cardInfoBean = CreateCardInfoBean(cardinfos.ElementAt(_temIndex).Value);
             //_cardFront.GetComponent<CardItem>()._index = i;
-            _cardFront.GetComponent<CardItem>().Init(cardInfoBean);
+            gameObject1.GetComponent<CardItem>().Init(cardInfoBean);
 
             CardsInHand.Add(gameObject1);
 
@@ -201,74 +232,80 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
     }
     public void HandleCard(GameObject cardGo)
     {
-        CardItem cardItem = cardGo.GetComponentInChildren<CardItem>();
-        CardInfoBean cardInfo = cardItem._cardInfo;
-        switch (cardInfo.type)
+        //需要有一点简单的效果
+        //卡片中的图片从左边渐变放大，像右边移动，然后慢慢消失
+        Action action = new Action(() =>
         {
-            case CardType.Atk:
-                //直接造成伤害
-                //计算伤害
-                float temAtk = (float)_playerInfo._curAtk;
-                _enermyInfo._curHP -= temAtk;
-                string log = $"玩家使用卡片对敌人造成了{cardInfo.value}点的伤害";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.AtkUp:
-                _playerInfo._curAtk += cardInfo.value;
-                log = $"玩家使用卡片提升自身{cardInfo.value}点的攻击力";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.AtkDown:
-                _enermyInfo._curAtk -= cardInfo.value;
-                log = $"玩家使用卡片降低敌方{cardInfo.value}点的攻击力";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.DefUp:
-                _playerInfo._curDef += cardInfo.value;
-                log = $"玩家使用卡片提升自身{cardInfo.value}点的防御力";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.DefDown:
-                _enermyInfo._curDef -= cardInfo.value;
-                log = $"玩家使用卡片降低敌方{cardInfo.value}点的防御力";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.Sleep:
-                log = $"玩家使用卡片让敌方睡眠跳过一回合";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-            case CardType.Cover:
-                _playerInfo._curHP += cardInfo.value;
-                log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
-                break;
-            case CardType.None:
-                log = $"玩家使用卡片....无事发生";
-                Debug.Log(log);
-                //text.text = log;
-                break;
-        }
-        //调用卡牌自己的消失功能
-        cardItem.Disappear();
-        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+            //同时文字提醒，同时对应的效果发动
+            CardItem cardItem = cardGo.GetComponent<CardItem>();
+            CardInfoBean cardInfo = cardItem._cardInfo;
+            switch (cardInfo.type)
+            {
+                case CardType.Atk:
+                    //直接造成伤害
+                    //计算伤害
+                    float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
+                    BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value + temAtk));
+                    string log = $"玩家使用卡片对敌人造成了{cardInfo.value}点的伤害";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.AtkUp:
+                    BattlePlayerInfo.Instance?.UpdateAtk(cardInfo.value);
+                    log = $"玩家使用卡片提升自身{cardInfo.value}点的攻击力";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.AtkDown:
+                    BattleEnermyInfo.Instance?.UpdateAtk(-cardInfo.value);
+                    log = $"玩家使用卡片降低敌方{cardInfo.value}点的攻击力";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.DefUp:
+                    BattlePlayerInfo.Instance?.UpdateDef(cardInfo.value);
+                    log = $"玩家使用卡片提升自身{cardInfo.value}点的防御力";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.DefDown:
+                    BattleEnermyInfo.Instance?.UpdateDef(-cardInfo.value);
+                    log = $"玩家使用卡片降低敌方{cardInfo.value}点的防御力";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.Sleep:
+                    log = $"玩家使用卡片让敌方睡眠跳过一回合";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+                case CardType.Cover:
+                    BattlePlayerInfo.Instance?.UpdateHp(cardInfo.value);
+                    log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
+                    break;
+                case CardType.None:
+                    log = $"玩家使用卡片....无事发生";
+                    Debug.Log(log);
+                    //text.text = log;
+                    break;
+            }
+            //调用卡牌自己的消失功能
+            cardItem.Disappear();
 
-        //对敌我双方进行血量判断，查看当前是否满足胜利/失败条件
-        CheckIsWin();
+            //对敌我双方进行血量判断，查看当前是否满足胜利/失败条件
+            CheckIsWin();
+        });
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_EFFECT, action);
     }
     void CheckIsWin()
     {
-        if (_enermyInfo._curHP<=0)
+        if (BattleEnermyInfo.Instance?.Character._curHP <= 0)
         {
             //胜利
             SwitchBattleType(BattleType.Winner);
             return;
         }
-        if (_playerInfo._curHP<=0)
+        if (BattlePlayerInfo.Instance?.Character._curHP <= 0)
         {
             //失败
             SwitchBattleType(BattleType.Lose);
@@ -279,61 +316,67 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
     {
         for (int i = 0; i < cardGos.Count; i++)
         {
-            CardItem cardItem = cardGos[i].GetComponentInChildren<CardItem>();
-            CardInfoBean cardInfo = cardItem._cardInfo;
-            switch (cardInfo.type)
+            Action action = new Action(() =>
             {
-                case CardType.Atk:
-                    //直接造成伤害
-                    //计算伤害
-                    float temAtk = _playerInfo._curAtk * 1.2f;
-                    _enermyInfo._curHP -= temAtk;
-                    string log = $"玩家使用卡片对敌人造成了{temAtk}点的伤害";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.AtkUp:
-                    _playerInfo._curAtk += cardInfo.value * 1.2f;
-                    log = $"玩家使用卡片提升自身{cardInfo.value * 1.2f}点的攻击力";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.AtkDown:
-                    _enermyInfo._curAtk -= cardInfo.value * 1.2f;
-                    log = $"玩家使用卡片降低敌方{cardInfo.value * 1.2f}点的攻击力";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.DefUp:
-                    _playerInfo._curDef += cardInfo.value * 1.2f;
-                    log = $"玩家使用卡片提升自身{cardInfo.value * 1.2f}点的防御力";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.DefDown:
-                    _enermyInfo._curDef -= cardInfo.value * 1.2f;
-                    log = $"玩家使用卡片降低敌方{cardInfo.value * 1.2f}点的防御力";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.Sleep:
-                    log = $"玩家使用卡片让敌方睡眠跳过一回合";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-                case CardType.Cover:
-                    _playerInfo._curHP += cardInfo.value * 1.2f;
-                    log = $"玩家使用卡片回复我方{cardInfo.value * 1.2f}点的血量";
-                    break;
-                case CardType.None:
-                    log = $"玩家使用卡片....无事发生";
-                    Debug.Log(log);
-                    //text.text = log;
-                    break;
-            }
-            //调用卡牌自己的消失功能
-            cardItem.Disappear();
+                CardItem cardItem = cardGos[i].GetComponent<CardItem>();
+                CardInfoBean cardInfo = cardItem._cardInfo;
+                switch (cardInfo.type)
+                {
+                    case CardType.Atk:
+                        //直接造成伤害
+                        //计算伤害
+                        float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
+                        BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value + temAtk) * 1.2f);
+                        string log = $"玩家使用卡片对敌人造成了{cardInfo.value}点的伤害";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.AtkUp:
+                        BattlePlayerInfo.Instance?.UpdateAtk(cardInfo.value * 1.2f);
+                        log = $"玩家使用卡片提升自身{cardInfo.value}点的攻击力";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.AtkDown:
+                        BattleEnermyInfo.Instance?.UpdateAtk(-cardInfo.value * 1.2f);
+                        log = $"玩家使用卡片降低敌方{cardInfo.value}点的攻击力";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.DefUp:
+                        BattlePlayerInfo.Instance?.UpdateDef(cardInfo.value * 1.2f);
+                        log = $"玩家使用卡片提升自身{cardInfo.value}点的防御力";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.DefDown:
+                        BattleEnermyInfo.Instance?.UpdateDef(-cardInfo.value);
+                        log = $"玩家使用卡片降低敌方{cardInfo.value}点的防御力";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.Sleep:
+                        log = $"玩家使用卡片让敌方睡眠跳过一回合";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                    case CardType.Cover:
+                        BattlePlayerInfo.Instance?.UpdateHp(cardInfo.value * 1.2f);
+                        log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
+                        break;
+                    case CardType.None:
+                        log = $"玩家使用卡片....无事发生";
+                        Debug.Log(log);
+                        //text.text = log;
+                        break;
+                }
+                //调用卡牌自己的消失功能
+                cardItem.Disappear();
+                //对敌我双方进行血量判断，查看当前是否满足胜利/失败条件
+                CheckIsWin();
+            });
             EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_EFFECT, action);
         }
 
     }
@@ -353,27 +396,4 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         //AssetsBundlesMgr.Instance?.UnloadAllAssetBundles();
         SceneManager.LoadScene("MainScene");
     }
-}
-[Serializable]
-public class CharacterInfo
-{
-    public int _id;
-    public string _name;
-    public string _description;
-    public int _level;
-    public int _type;
-    public float _maxHP;
-    public float _curHP;
-    public float _oriAtk;
-    public float _curAtk;
-    public float _oriDef;
-    public float _curDef;
-}
-[Serializable]
-public class PlayerInfo : CharacterInfo
-{
-}
-[Serializable]
-public class EnermyInfo : CharacterInfo
-{
 }

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,14 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using static EnumMgr;
+using Sequence = DG.Tweening.Sequence;
 
 public class BattleUIMgr : MonoSingleton<BattleUIMgr>
 {
     private GameObject _cardDetailGO;
     private GameObject _cardMenuGO;
+    private GameObject _showCardGO;
+    private GameObject _settlementGO;
 
     private GameObject _mainCanvas;
     private void Awake()
@@ -28,25 +32,25 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
 
         //初始化菜单栏
         _cardMenuGO = _mainCanvas.transform.Find("PC/BattleMenu/Panel").gameObject;
+        _showCardGO = _mainCanvas.transform.Find("PC/CardEffect").gameObject;
+
+        //初始化结算画面
+        GameObject temSettlementGO = Resources.Load<GameObject>("Prefabs/SettlementGo");
+        _settlementGO = Instantiate(temSettlementGO);
+        _settlementGO.transform.SetParent(_mainCanvas.transform.Find("PC"));
+        _settlementGO.transform.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+        _settlementGO.transform.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        _settlementGO.SetActive(false);
+
         _cardMenuGO.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
             BattleSystemMgr.Instance?.SwitchBattleType(BattleType.EnermyTurn);
         });
-        //_cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
-        //{
-        //    this.ResetCards();
-        //    BattleSystemMgr.Instance?.GetCard();
-        //});
         _cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
         {
             BattleSystemMgr.Instance?.ToMainScene();
         });
-        _cardMenuGO.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
-        {
-            //模拟敌方进攻结束
-            BattleSystemMgr.Instance?.SwitchBattleType(BattleType.PlayerTurn);
-        });
-        //初始化UI相关的委托事件
+        //初始化卡片UI相关的委托事件
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL, ShowCardDetail);
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL, CloseCardDetail);
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_REFRESH_CARDS, RefreshCards);
@@ -58,7 +62,16 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_RESET_CARDS, ResetCards);
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_ACTIVATE_CARDSINHAND, ActivateCardsInHandGroup);
         EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_INACTIVATE_CARDSINHAND, InActivateCardsInHandGroup);
+        EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_SHOW_CARD_EFFECT, ShowCardEffect);
+        EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_PLAYER_WIN, ShowPlayerWin);
+        EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_PLAYER_LOSE, ShowPlayerLose);
+
+        //初始化角色UI相关的委托事件
+        //EventCenter.Instance?.listen(CustomEvent.BATTLE_UI_REFRESH_CHARACTERINFO, RefreshCharacterInfo);
+        //初始化
     }
+
+    #region 这些是关于更新卡片信息的方法
     List<CardItem> _temSelectedAllCardList = new List<CardItem>();
     List<CardItem> _temSelectedUpgradeCardList = new List<CardItem>();
     List<CardItem> _temSelectedComboCardList = new List<CardItem>();
@@ -136,9 +149,9 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
                 {
                     _temSelectedComboCardList.Add(cardItem);
                 }
-                if (_temSelectedComboCardList.Count>1)
+                if (_temSelectedComboCardList.Count > 1)
                 {
-                    if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id 
+                    if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
                         && _temSelectedComboCardList[0]._cardInfo.combo_id == item._cardInfo.combo_id)
                     {
                         Debug.Log("可进行连携攻击");
@@ -169,7 +182,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
                 {
                     _temSelectedFusionList.Add(cardItem);
                 }
-                if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id 
+                if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
                     && _temSelectedFusionList[0]._cardInfo.fusion_id == item._cardInfo.fusion_id)
                 {
                     Debug.Log("相同，可融合");
@@ -196,7 +209,8 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
     /// <summary>
     /// 需要在每次执行对卡片的处理后都重置手牌状态
     /// </summary>
-    void ResetCards(object data = null) {
+    void ResetCards(object data = null)
+    {
         _temSelectedAllCardList.Clear();
         _temSelectedUpgradeCardList.Clear();
         _temSelectedComboCardList.Clear();
@@ -206,7 +220,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         List<GameObject> cardsInHand = BattleSystemMgr.Instance?.CardsInHand;
         for (int i = 0; i < cardsInHand.Count; i++)
         {
-            CardItem cardItem = cardsInHand[i].GetComponentInChildren<CardItem>();
+            CardItem cardItem = cardsInHand[i].GetComponent<CardItem>();
             cardItem._isSelected = false;
             cardItem._isDestroy = false;
             cardItem.CloseUpdadteCard();
@@ -225,7 +239,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         string id = tem2UpgradeCard.GetComponent<CardItem>()._cardInfo.id;
         string upgradeid = tem2UpgradeCard.GetComponent<CardItem>()._cardInfo.upgrade_id;
         //找到在卡组中跟这个升级的卡片相同id的第一个
-        List<CardItem> temList = _temSelectedUpgradeCardList.Where(x=>x._cardInfo.id==id).ToList();
+        List<CardItem> temList = _temSelectedUpgradeCardList.Where(x => x._cardInfo.id == id).ToList();
         //将最先选中的卡片进行献祭销毁，将新的卡片覆盖到点击升级的这张卡片上
         _temSelectedAllCardList.Remove(temList[0]);
         temList[0].Disappear();
@@ -253,7 +267,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         temList[0].Disappear();
         tem2ComboCard.GetComponent<CardItem>().Disappear();
         //将当前的卡和索引为0的卡打出去
-        BattleSystemMgr.Instance?.HandleComboCards(new List<GameObject>() { temList[0]._cardGo, tem2ComboCard.GetComponent<CardItem>()._cardGo });
+        BattleSystemMgr.Instance?.HandleComboCards(new List<GameObject>() { temList[0].gameObject, tem2ComboCard.GetComponent<CardItem>().gameObject });
         this.ResetCards();
     }
 
@@ -292,7 +306,7 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
 
     void CloseCardDetail(object card)
     {
-        if (_temSelectedAllCardList.Count!=0)
+        if (_temSelectedAllCardList.Count != 0)
         {
             return;
         }
@@ -300,27 +314,101 @@ public class BattleUIMgr : MonoSingleton<BattleUIMgr>
         _cardDetailGO.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
         _cardDetailGO.SetActive(false);
     }
+
+    public void ShowCardEffect(object data)
+    {
+        _showCardGO.transform.DOLocalMoveX(-600, 0);
+        //需要有一点简单的效果
+        //卡片中的图片从左边渐变放大，像右边移动，然后慢慢消失
+        Sequence sequence = DOTween.Sequence();
+        sequence
+        .AppendCallback(() =>
+        {
+            _showCardGO.transform.DOLocalMoveX(0, 0.3f);
+            _showCardGO.transform.DOScale(1.5f, 0.3f);
+            _showCardGO.transform.GetComponent<CanvasGroup>().DOFade(1f, 0.3f);
+        })
+        .AppendInterval(1.5f)
+        .AppendCallback(() =>
+        {
+            _showCardGO.transform.DOLocalMoveX(600, 0.5f);
+            _showCardGO.transform.DOScale(0.6f, 0.5f);
+            _showCardGO.transform.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
+        }).AppendCallback(() =>
+        {
+            Action action = (Action)data;
+            if (action != null)
+            {
+                action();
+            }
+        });
+        //同时文字提醒，同时对应的效果发动
+        ToastManager.Instance?.CreatToast("发动卡片效果：xxxxxxx");
+    }
+
+    private void ShowMenu(object data)
+    {
+        this._cardMenuGO.SetActive(true);
+        if (BattleSystemMgr.Instance?.BattleType == BattleType.PlayerTurn)
+        {
+            this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = false;
+        }
+    }
+
+    private void CloseMenu(object data)
+    {
+        this._cardMenuGO.SetActive(false);
+    }
+    #endregion
+
+    void ShowPlayerWin(object data)
+    {
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(0,0);
+        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1,0);
+        this._settlementGO.SetActive(true);
+        this._settlementGO.transform.GetChild(0).gameObject.SetActive(true);
+        this._settlementGO.transform.GetChild(1).gameObject.SetActive(false);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1,1f);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1,1f);
+        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1.2f, 1.5f);
+        BattleSystemMgr.Instance?.SwitchBattleType(BattleType.End);
+    }
+    void ShowPlayerLose(object data)
+    {
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(0, 0);
+        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1, 0);
+        this._settlementGO.SetActive(true);
+        this._settlementGO.transform.GetChild(1).gameObject.SetActive(true);
+        this._settlementGO.transform.GetChild(0).gameObject.SetActive(false);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
+        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1.2f, 1.5f);
+        BattleSystemMgr.Instance?.SwitchBattleType(BattleType.End);
+    }
+
     private void OnDestroy()
     {
         EventCenter.Instance?.removeAll(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
         EventCenter.Instance?.removeAll(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL);
     }
-
-    private void ShowMenu(object data)
+    #region 这些是关于更新角色信息的方法
+    void RefreshCharacterInfo(object characterObj)
     {
-        //this._cardMenuGO.SetActive(true);
-        //if (BattleSystemMgr.Instance?.BattleType == BattleType.PlayerTurn)
-        //{
-        //    this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = true;
-        //}
-        //else
-        //{
-        //    this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = false;
-        //}
+        if (characterObj is BattlePlayerBean)
+        {
+            //更新主角信息
+
+        }
+        else
+        {
+            //更新敌方信息
+        }
     }
 
-    private void CloseMenu(object data)
-    {
-        //this._cardMenuGO.SetActive(false);
-    }
+
+    #endregion
 }
