@@ -14,20 +14,19 @@ using Sequence = DG.Tweening.Sequence;
 
 public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    
+    public GameObject _mFront;//卡牌正面
+    public GameObject _mBack;//卡牌背面
+    public CardState mCardState = CardState.Front;//卡牌当前的状态，是正面还是背面？
+    public float mTime = 0.3f;
+    private bool isActive = false;//true代表正在执行翻转，不许被打断
+
     public CardInfoBean _cardInfo;//卡片信息对象
     public int _index;//此卡在卡组中的索引(顺序)
 
-    //private GameObject _mainCanvas;//主canvas
-    //public GameObject _cardDescPanel;//查看卡片详情
     public AudioClip _cardClip;//音频播放器
-    //private RectTransform rectTransform; // 用于存储UI元素的RectTransform组件
-    //private Transform _orignTrans;//原卡组父级
-    //private Transform _hightLightTrans;//高亮卡组父级
-    public GameObject _cardGo;//卡片最父级
     public Sprite _cardPic;//卡片图
-
     private GameObject _menuPanel;//显示卡片选项的panel
-
     public bool _isSelected = false;
     public bool _isDestroy = false;
 
@@ -38,10 +37,11 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         //_audioSource = GetComponent<AudioSource>();
         //_audioSource.loop = false;
         //_audioSource.playOnAwake = false;
-        _cardGo = this.transform.parent.gameObject;
+        _mFront = this.transform.GetChild(0).gameObject;
+        _mBack = this.transform.GetChild(1).gameObject;
         //_orignTrans = _mainCanvas.transform.Find("PC/CardGroup/Panel");
         //_hightLightTrans = _mainCanvas.transform.Find("PC/CardGroup2");
-        _menuPanel = this._cardGo.transform.GetChild(2).gameObject;
+        _menuPanel = this.transform.GetChild(2).gameObject;
         _menuPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
             this.ComboCard();
@@ -65,7 +65,50 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         //rectTransform = transform.parent.GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
 
     }
+    /// <summary>
+    /// 留给外界调用的接口
+    /// </summary>
+    public void StartBack()
+    {
+        if (isActive)
+            return;
+        StartCoroutine(ToBack());
+    }
+    /// <summary>
+    /// 留给外界调用的接口
+    /// </summary>
+    public void StartFront()
+    {
+        if (isActive)
+            return;
+        StartCoroutine(ToFront());
+    }
+    /// <summary>
+    /// 翻转到背面
+    /// </summary>
+    public IEnumerator ToBack()
+    {
+        isActive = true;
+        _mFront.transform.DORotate(new Vector3(0, 90, 0), mTime);
+        for (float i = mTime; i >= 0; i -= Time.deltaTime)
+            yield return 0;
+        _mBack.transform.DORotate(new Vector3(0, 0, 0), mTime);
+        isActive = false;
 
+    }
+    /// <summary>
+    /// 翻转到正面
+    /// </summary>
+    public IEnumerator ToFront()
+    {
+        isActive = true;
+        _mBack.transform.DORotate(new Vector3(0, 90, 0), mTime);
+        MusicManager.Instance?.PlayClipByIndex(0);
+        for (float i = mTime; i >= 0; i -= Time.deltaTime)
+            yield return 0;
+        _mFront.transform.DORotate(new Vector3(0, 0, 0), mTime);
+        isActive = false;
+    }
     public void Init(CardInfoBean infos)
     {
         this._cardInfo = infos;
@@ -74,14 +117,14 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (texture2D != null)
         {
             _cardPic = Sprite.Create((Texture2D)texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(10, 10));
-            this.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
-            PictureMgr.Instance?.AdjustImageToAspectFit(this.transform.Find("Pic").GetComponent<Image>(), this.GetComponent<RectTransform>());
+            this._mFront.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
+            PictureMgr.Instance?.AdjustImageToAspectFit(this._mFront.transform.Find("Pic").GetComponent<Image>(), this.GetComponent<RectTransform>());
         }
 
         //显示加载的数据
-        this.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
-        this.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
-        this.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
+        this._mFront.transform.Find("CastPanel").GetComponentInChildren<Text>().text = infos.cast;
+        this._mFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
+        this._mFront.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
         this._cardClip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
 
     }
@@ -166,21 +209,21 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     #endregion
 
 
-    public void Disappear(Action action = null)
+    public void Disappear()
     {
         _isDestroy = true;
-        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
-        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.parent.gameObject);
+        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.gameObject);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
-            this._cardGo.transform.DOScale(1.2f, 0.3f);
-            this._cardGo.GetComponent<CanvasGroup>().DOFade(0, 0.5f);
-        }).AppendInterval(0.5f).AppendCallback(() =>
+            this.transform.DOLocalMoveX(-600, 0.3f);
+            this.transform.DOLocalMoveY(300, 0.3f);
+            this.GetComponent<CanvasGroup>().DOFade(0, 0.2f);
+        }).AppendInterval(0.2f).AppendCallback(() =>
         {
-            if (action!=null) { action(); }
-            
-            Destroy(this._cardGo.gameObject);
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
+            Destroy(this.gameObject);
         });
     }
 
@@ -220,7 +263,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     void UseCard()
     {
-        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(_cardGo);
+        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(this.gameObject);
     }
     public void ShowUpdadteCard()
     {
@@ -244,7 +287,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         }).AppendInterval(0.5f).AppendCallback(() =>
         {
-            this.transform.DOScale(1f, 0.2f);
+            this.transform.DOScale(0.8f, 0.2f);
         });
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_UPDATE_CARDS, this.gameObject);
     }

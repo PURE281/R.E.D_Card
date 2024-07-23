@@ -39,9 +39,9 @@ public class CsvManager : Singleton<CsvManager>
         //ReadCardInfoCSVFile(fileName);
     }
 
-    public Dictionary<int, CharacterInfo> ReadCharacterInfoCSVFile()
+    public Dictionary<int, CharacterBean> ReadCharacterInfoCSVFile()
     {
-        Dictionary<int, CharacterInfo> keyValuePairs = new Dictionary<int, CharacterInfo>();
+        Dictionary<int, CharacterBean> keyValuePairs = new Dictionary<int, CharacterBean>();
         List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets","CharacterData.csv");
         for (int i = 1; i < data.Count - 1; i++)
         {
@@ -49,7 +49,7 @@ public class CsvManager : Singleton<CsvManager>
             {
                 case 0:
                     //Íæ¼Ò
-                    PlayerInfo playerInfo = new PlayerInfo();
+                    BattlePlayerBean playerInfo = new BattlePlayerBean();
                     playerInfo._id = int.Parse(data[i][0]);
                     playerInfo._name = data[i][1];
                     playerInfo._level = (int.Parse(data[i][2]));
@@ -65,7 +65,7 @@ public class CsvManager : Singleton<CsvManager>
                     break;
                 case 1:
                     //Íæ¼Ò
-                    EnermyInfo enmeryInfo = new EnermyInfo();
+                    BattleEnermyBean enmeryInfo = new BattleEnermyBean();
                     enmeryInfo._id = int.Parse(data[i][0]);
                     enmeryInfo._name = data[i][1];
                     enmeryInfo._level = (int.Parse(data[i][2]));
