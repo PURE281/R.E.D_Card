@@ -123,6 +123,26 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &50010460 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4704534369361783199, guid: 6c6b9486b8be23d469d18a923d69aad7, type: 3}
+  m_PrefabInstance: {fileID: 460914903}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &50010462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50010460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a08d9144abc9749956af13a37d5a3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  global: 1
+  _clipsData: {fileID: 11400000, guid: bc8a22f14170bfb42af59feda82696e4, type: 2}
+  _bgmsData: {fileID: 11400000, guid: 9167abb779693ba4cb2c24d03853e787, type: 2}
 --- !u!1 &146447188
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +409,7 @@ GameObject:
   - component: {fileID: 281823235}
   - component: {fileID: 281823234}
   - component: {fileID: 281823233}
+  - component: {fileID: 281823237}
   m_Layer: 5
   m_Name: CardPanel
   m_TagString: Untagged
@@ -428,7 +449,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d4c234668bd4046a48180fc23ecdf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 1
   _startCardsbtn: {fileID: 1352740275}
+  _cardsInHand: []
 --- !u!114 &281823234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +514,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 281823231}
   m_CullTransparentMesh: 1
+--- !u!225 &281823237
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281823231}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &331806552
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,6 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 535162f8ea88b9f438f9b124185982f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 1
 --- !u!1 &444783492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1194,7 +1230,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 37e3afc584422cc4b83eb7f76fa9d042, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -1873,6 +1909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce32c71acf38b3549b5d8bfef2521ca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 1
   _btnPanel: {fileID: 0}
 --- !u!1 &1352740273
 GameObject:
@@ -1960,7 +1997,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 281823233}
         m_TargetAssemblyTypeName: CardGroupMgr, Assembly-CSharp
-        m_MethodName: RestartGetCards
+        m_MethodName: GetCard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2151,8 +2188,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1350, y: -75}
-  m_SizeDelta: {x: 300, y: 300}
+  m_AnchoredPosition: {x: 450, y: -75}
+  m_SizeDelta: {x: 250, y: 58}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1517230853
 MonoBehaviour:
@@ -2197,7 +2234,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1517230854}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 281823233}
+        m_TargetAssemblyTypeName: CardGroupMgr, Assembly-CSharp
+        m_MethodName: GetCardProbability
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1517230854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2416,7 +2465,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76d4c234668bd4046a48180fc23ecdf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 1
   _startCardsbtn: {fileID: 877264497}
+  _cardsInHand: []
 --- !u!114 &1659221441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2818,4 +2869,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75aef0de92c350744b0709ade990fa99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite_cards_list: []

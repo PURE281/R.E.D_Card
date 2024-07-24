@@ -20,4 +20,5 @@ public class CardInfoBean
     public string combo_id;
     public string fusion_id;
     public string proficiency;
+    public string probability;
 }
