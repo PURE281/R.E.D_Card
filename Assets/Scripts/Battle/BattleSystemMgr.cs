@@ -95,6 +95,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         cardInfo.combo_id = bean.combo_id;
         cardInfo.fusion_id = bean.fusion_id;
         cardInfo.proficiency = bean.proficiency;
+        cardInfo.probability = bean.probability;
         return cardInfo;
     }
     void ShuffleList(List<KeyValuePair<string, CardInfoBean>> list)

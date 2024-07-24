@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static EnumMgr;
-using static UnityEditor.PlayerSettings;
 using Sequence = DG.Tweening.Sequence;
 
 

@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static EnumMgr;
-using static UnityEditor.PlayerSettings;
 using Sequence = DG.Tweening.Sequence;
 
 
@@ -143,8 +142,8 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         //显示加载的数据
         this._mFront.transform.Find("ProPanel").GetComponentInChildren<Text>().text = HightlightPro(infos.probability);
-        this._mFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
-        this._mFront.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
+        //this._mFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();
+        //this._mFront.transform.Find("AtkPanel/Type").GetComponent<Text>().text = infos.type.ToString();
         this._cardClip = Resources.Load<AudioClip>($"Music/clips/{infos.name}");
 
     }
