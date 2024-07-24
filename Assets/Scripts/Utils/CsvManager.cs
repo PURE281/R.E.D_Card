@@ -12,8 +12,8 @@ public class CsvManager : Singleton<CsvManager>
     {
         Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
         List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CardData.csv");
-        //for (int i = 1; i < data.Count - 1; i++)
-        for (int i = 1; i < 10; i++)
+        for (int i = 1; i < data.Count - 1; i++)
+            //for (int i = 1; i < 10; i++)
         {
             CardInfoBean cardInfo = new CardInfoBean();
             cardInfo.id = data[i][0];
@@ -27,7 +27,8 @@ public class CsvManager : Singleton<CsvManager>
             cardInfo.upgrade_id = data[i][8];
             cardInfo.combo_id = data[i][9];
             cardInfo.fusion_id = data[i][10];
-            cardInfo.proficiency = data[i][11].Replace("\r", "");
+            cardInfo.proficiency = data[i][11];
+            cardInfo.probability = data[i][13].Replace("\r", "");
             keyValuePairs.Add(cardInfo.id, cardInfo);
         }
         return keyValuePairs;

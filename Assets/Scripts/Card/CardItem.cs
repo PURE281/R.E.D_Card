@@ -41,27 +41,31 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         _mBack = this.transform.GetChild(1).gameObject;
         //_orignTrans = _mainCanvas.transform.Find("PC/CardGroup/Panel");
         //_hightLightTrans = _mainCanvas.transform.Find("PC/CardGroup2");
-        _menuPanel = this.transform.GetChild(2).gameObject;
-        _menuPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
+        if (_menuPanel!=null)
         {
-            this.ComboCard();
-        });
-        _menuPanel.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
-        {
-            this.FusionCard();
-        });
-        _menuPanel.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
-        {
-            this.UpdadteCard();
-        });
-        _menuPanel.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
-        {
-            this.UseCard();
-        });
-        _menuPanel.transform.GetChild(0).GetComponent<Button>().interactable = false;
-        _menuPanel.transform.GetChild(1).GetComponent<Button>().interactable = false;
-        _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = false;
-        _menuPanel.SetActive(false);
+            _menuPanel = this.transform.GetChild(2).gameObject;
+            _menuPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.ComboCard();
+            });
+            _menuPanel.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.FusionCard();
+            });
+            _menuPanel.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.UpdadteCard();
+            });
+            _menuPanel.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.UseCard();
+            });
+            _menuPanel.transform.GetChild(0).GetComponent<Button>().interactable = false;
+            _menuPanel.transform.GetChild(1).GetComponent<Button>().interactable = false;
+            _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = false;
+            _menuPanel.SetActive(false);
+        }
+       
         //rectTransform = transform.parent.GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
 
     }
