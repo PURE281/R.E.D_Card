@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 管理主场景的代码，负责进行场景切换和设置
 /// </summary>
-public class MainSceneMgr : MonoSingleton<MainSceneMgr>
+public class MainSceneMgr : MonoSington<MainSceneMgr>
 {
     public GameObject _btnPanel;
     // Start is called before the first frame update

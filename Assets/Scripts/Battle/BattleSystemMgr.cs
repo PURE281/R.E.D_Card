@@ -13,7 +13,7 @@ using Sequence = DG.Tweening.Sequence;
 /// <summary>
 /// 回合制对战系统的管理脚本
 /// </summary>
-public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
+public class BattleSystemMgr : MonoSington<BattleSystemMgr>
 {
     [SerializeField]
     /// <summary>
@@ -214,11 +214,11 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
             //给预制体添加卡片信息
             int _temIndex = new MinMaxRandomInt(0, cardinfos.Count).GetRandomValue();
             //Transform _cardFront = gameObject1.transform.Find("CardFront");
-            gameObject1.AddComponent<CardItem>();
-            gameObject1.GetComponent<CardItem>().StartFront();
+            gameObject1.AddComponent<BattleCardItem>();
+            gameObject1.GetComponent<BattleCardItem>().StartFront();
             CardInfoBean cardInfoBean = CreateCardInfoBean(cardinfos.ElementAt(_temIndex).Value);
             //_cardFront.GetComponent<CardItem>()._index = i;
-            gameObject1.GetComponent<CardItem>().Init(cardInfoBean);
+            gameObject1.GetComponent<BattleCardItem>().Init(cardInfoBean);
 
             CardsInHand.Add(gameObject1);
 
@@ -237,7 +237,7 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         Action action = new Action(() =>
         {
             //同时文字提醒，同时对应的效果发动
-            CardItem cardItem = cardGo.GetComponent<CardItem>();
+            BattleCardItem cardItem = cardGo.GetComponent<BattleCardItem>();
             CardInfoBean cardInfo = cardItem._cardInfo;
             switch (cardInfo.type)
             {
@@ -318,7 +318,7 @@ public class BattleSystemMgr : MonoSingleton<BattleSystemMgr>
         {
             Action action = new Action(() =>
             {
-                CardItem cardItem = cardGos[i].GetComponent<CardItem>();
+                BattleCardItem cardItem = cardGos[i].GetComponent<BattleCardItem>();
                 CardInfoBean cardInfo = cardItem._cardInfo;
                 switch (cardInfo.type)
                 {

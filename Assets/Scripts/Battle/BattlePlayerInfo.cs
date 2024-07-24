@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattlePlayerInfo : MonoSingleton<BattlePlayerInfo>
+public class BattlePlayerInfo : MonoSington<BattlePlayerInfo>
 {
     [SerializeField]
     private CharacterBean _character;

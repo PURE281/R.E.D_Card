@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BattleEnermyInfo : MonoSingleton<BattleEnermyInfo>
+public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
 {
     [SerializeField]
     private CharacterBean _character;

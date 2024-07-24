@@ -71,7 +71,7 @@
     <Compile Include="Assets\Scripts\Main\MainSceneMgr.cs" />
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MinMaxRandomColorUnmutableAlpha\MinMaxRandomColorImmutableAlpha.cs" />
-    <Compile Include="Assets\Scripts\Card\CardItem.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattleCardItem.cs" />
     <Compile Include="Assets\Scripts\Utils\Events\CustomEvent.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\MyNewClassType.cs" />
     <Compile Include="Assets\Scripts\Utils\MonoSingleton.cs" />
@@ -91,7 +91,6 @@
     <Compile Include="Assets\Scripts\Scenes\BattleSceneMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\RandomElementsSystemExample2.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\SelectiveRandomWeightMinMaxRandomInt.cs" />
-    <Compile Include="Assets\Scripts\Card\CardTurnOver.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\WeightPropertyMinMaxRandomInt.cs" />
     <Compile Include="Assets\Scripts\Utils\PictureMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\WeightPropertyMyNewClassType.cs" />
@@ -109,6 +108,7 @@
     <Compile Include="Assets\Scripts\Battle\BattleEnermyInfo.cs" />
     <Compile Include="Assets\Scripts\Bean\BattlePlayerBean.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\SelectiveRandomWeightMyNewClassType.cs" />
+    <Compile Include="Assets\Scripts\Card\CardItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

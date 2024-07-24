@@ -15,7 +15,7 @@ using UnityEngine.UI;
 /// 这是用来管理抽卡的卡组的管理类
 /// 实现功能，打乱卡牌顺序，随机按照顺序依次出现，然后依次转出正面，在特别的图片中需要有特定的处理
 /// </summary>
-public class CardGroupMgr : MonoSingleton<CardGroupMgr>
+public class CardGroupMgr : MonoSington<CardGroupMgr>
 {
 
     /// <summary>
@@ -106,10 +106,10 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
             int _temIndex = new MinMaxRandomInt(0, cardinfos.Count).GetRandomValue();
             //Transform _cardFront = gameObject1.transform.Find("CardFront");
             gameObject1.AddComponent<CardItem>();
-            gameObject1.GetComponent<CardItem>().StartFront();
             CardInfoBean cardInfoBean = CreateCardInfoBean(GetCardBeanByProbability());
             //_cardFront.GetComponent<CardItem>()._index = i;
             gameObject1.GetComponent<CardItem>().Init(cardInfoBean);
+            gameObject1.GetComponent<CardItem>().StartFront();
 
             CardsInHand.Add(gameObject1);
 
@@ -120,6 +120,8 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
     float rareCardChance = 0.13f;//sr
     float epicCardChance = 0.06f;//ssr
     float legendaryCardChance = 0.01f;//ur
+
+
     CardInfoBean GetCardBeanByProbability()
     {
         CardProbability cardProbability = GetCardProbability();
@@ -134,9 +136,11 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
                 return srCardList[tem];
             case CardProbability.SSR:
                 tem = new MinMaxRandomInt(0, ssrCardList.Count).GetRandomValue();
+                Debug.Log("抽到ssr啦");
                 return ssrCardList[tem];
             case CardProbability.UR:
                 tem = new MinMaxRandomInt(0, urCardList.Count).GetRandomValue();
+                Debug.Log("抽到ur啦");
                 return urCardList[tem];
         }
         return null;
@@ -158,6 +162,7 @@ public class CardGroupMgr : MonoSingleton<CardGroupMgr>
         cardInfo.combo_id = bean.combo_id;
         cardInfo.fusion_id = bean.fusion_id;
         cardInfo.proficiency = bean.proficiency;
+        cardInfo.probability = bean.probability;
         return cardInfo;
     }
     void ShuffleList(List<KeyValuePair<string, CardInfoBean>> list)

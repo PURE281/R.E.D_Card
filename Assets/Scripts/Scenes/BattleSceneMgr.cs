@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static EnumMgr;
 
-public class BattleSceneMgr : MonoSingleton<BattleSceneMgr>
+public class BattleSceneMgr : MonoSington<BattleSceneMgr>
 {
     private void Awake()
     {

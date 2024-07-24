@@ -482,6 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce32c71acf38b3549b5d8bfef2521ca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 0
   _btnPanel: {fileID: 1732066960}
 --- !u!1 &1018788276
 GameObject:
@@ -915,6 +916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f440085272da9cd41a8ca1c19ac16455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  global: 1
   ToastPrefab: {fileID: 6929973206929979489, guid: 15ebee5bf702c2d4682783ab6479bb40, type: 3}
   ToastList: []
   Interval: 0
@@ -1332,6 +1334,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1732066960}
   m_CullTransparentMesh: 1
+--- !u!1 &1818572775 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4704534369361783199, guid: 6c6b9486b8be23d469d18a923d69aad7, type: 3}
+  m_PrefabInstance: {fileID: 4704534368498270326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1818572777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818572775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a08d9144abc9749956af13a37d5a3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  global: 1
+  _clipsData: {fileID: 11400000, guid: bc8a22f14170bfb42af59feda82696e4, type: 2}
+  _bgmsData: {fileID: 11400000, guid: 9167abb779693ba4cb2c24d03853e787, type: 2}
 --- !u!1 &1878462952
 GameObject:
   m_ObjectHideFlags: 0

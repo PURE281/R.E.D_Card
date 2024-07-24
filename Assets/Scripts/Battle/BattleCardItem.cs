@@ -13,7 +13,7 @@ using Sequence = DG.Tweening.Sequence;
 
 
 
-public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class BattleCardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
 
     public GameObject _mFront;//卡牌正面
@@ -27,12 +27,38 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public AudioClip _cardClip;//音频播放器
     public Sprite _cardPic;//卡片图
+    private GameObject _menuPanel;//显示卡片选项的panel
+    public bool _isSelected = false;
+    public bool _isDestroy = false;
 
     private void Awake()
     {
         _mFront = this.transform.GetChild(0).gameObject;
         _mBack = this.transform.GetChild(1).gameObject;
-        
+        _menuPanel = this.transform.GetChild(2).gameObject;
+        if (_menuPanel != null)
+        {
+            _menuPanel.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.ComboCard();
+            });
+            _menuPanel.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.FusionCard();
+            });
+            _menuPanel.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.UpdadteCard();
+            });
+            _menuPanel.transform.GetChild(3).GetComponent<Button>().onClick.AddListener(() =>
+            {
+                this.UseCard();
+            });
+            _menuPanel.transform.GetChild(0).GetComponent<Button>().interactable = false;
+            _menuPanel.transform.GetChild(1).GetComponent<Button>().interactable = false;
+            _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = false;
+            _menuPanel.SetActive(false);
+        }
 
         //rectTransform = transform.parent.GetComponent<RectTransform>(); // 获取UI元素的RectTransform  
 
@@ -95,6 +121,7 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
                 //});
                 break;
             case "sr":
+                //_mFront.transform.DOShakePosition(2, new Vector3(5, 5, 0));
                 sequence.AppendCallback(() =>
                 {
                     _mFront.transform.DOScale(1.1f, 1f);
@@ -258,6 +285,8 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     /// </summary>
     public void Disappear()
     {
+        _isDestroy = true;
+        BattleSystemMgr.Instance?.RemoveCardInHand(this.transform.gameObject);
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -266,18 +295,103 @@ public class CardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             this.GetComponent<CanvasGroup>().DOFade(0, 0.2f);
         }).AppendInterval(0.2f).AppendCallback(() =>
         {
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_RESET_CARDS);
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL);
             Destroy(this.gameObject);
         });
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (_cardClip!=null)
+        _isSelected = !_isSelected;
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_REFRESH_CARDS, this.gameObject);
+        if (_isSelected)
         {
-            MusicManager.Instance?.PlayClipByClip(_cardClip);
+            this.OpenMenu();
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_DETAIL, this.gameObject);
+        }
+        else
+        {
+            this.CloseMenu();
+            EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_CLOSE_CARD_DETAIL, this.gameObject);
+        }
+        if (_cardClip != null)
+        {
+            MusicManager.Instance?.PlayClipByClip(this._cardClip);
         }
     }
 
 
-    
+    public void OpenMenu()
+    {
+        this.transform.DOLocalMoveY(30, 0.2f);
+        _menuPanel.SetActive(true);
+        //需要查看手牌中是否有可以升级或者连携或者融合的相关牌
+    }
+    public void CloseMenu()
+    {
+        this.transform.DOLocalMoveY(0, 0.2f);
+        _menuPanel.SetActive(false);
+        //需要查看手牌中是否有可以升级或者连携或者融合的相关牌
+    }
+
+    void UseCard()
+    {
+        BattleSceneMgr.Instance?.GetComponent<BattleSystemMgr>().HandleCard(this.gameObject);
+    }
+    public void ShowUpdadteCard()
+    {
+        _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        //升级的话需要更新熟练度
+    }
+
+    public void CloseUpdadteCard()
+    {
+        _menuPanel.transform.GetChild(2).GetComponent<Button>().interactable = false;
+    }
+    void UpdadteCard()
+    {
+        //Debug.Log("升级卡片");
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendCallback(() =>
+        {
+            this.transform.DOScale(1.3f, 0.5f);
+            MusicManager.Instance?.PlayClipByIndex(2);
+
+
+        }).AppendInterval(0.5f).AppendCallback(() =>
+        {
+            this.transform.DOScale(0.8f, 0.2f);
+        });
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_UPDATE_CARDS, this.gameObject);
+    }
+
+    public void ShowComboCard()
+    {
+        _menuPanel.transform.GetChild(0).GetComponent<Button>().interactable = true;
+    }
+
+    public void CloseComboCard()
+    {
+        _menuPanel.transform.GetChild(0).GetComponent<Button>().interactable = false;
+    }
+    void ComboCard()
+    {
+        Debug.Log("打出连携");
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_COMBO_CARDS, this.gameObject);
+    }
+    public void ShowFusionCard()
+    {
+        _menuPanel.transform.GetChild(1).GetComponent<Button>().interactable = true;
+    }
+
+    public void CloseFusionCard()
+    {
+        _menuPanel.transform.GetChild(1).GetComponent<Button>().interactable = false;
+    }
+    void FusionCard()
+    {
+        Debug.Log("融合卡");
+        EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_FUSION_CARDS, this.gameObject);
+    }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class EventCenter : MonoSingleton<EventCenter>
+public class EventCenter : MonoSington<EventCenter>
 {
     private Dictionary<string, UnityEvent<object>> _dic;
 
