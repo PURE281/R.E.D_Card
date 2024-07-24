@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Scenes\CardSceneMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\SelectiveExample\Scripts\SelectiveExample.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleSystemMgr.cs" />
+    <Compile Include="Assets\Scripts\Bean\CharacterBean.cs" />
     <Compile Include="Assets\Scripts\Main\MainSceneMgr.cs" />
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MinMaxRandomColorUnmutableAlpha\MinMaxRandomColorImmutableAlpha.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Assets\Scripts\Utils\Events\CustomEvent.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\MyNewClassType.cs" />
     <Compile Include="Assets\Scripts\Utils\MonoSingleton.cs" />
+    <Compile Include="Assets\Scripts\Battle\BattlePlayerInfo.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\DefaultApproachExample2.cs" />
     <Compile Include="Assets\Scripts\Utils\MusicManager.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewEnumType\RandomMyNewEnumType.cs" />
@@ -89,7 +91,6 @@
     <Compile Include="Assets\Scripts\Scenes\BattleSceneMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompareWithDefaultApproachExample\Scripts\RandomElementsSystemExample2.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\SelectiveRandomWeightMinMaxRandomInt.cs" />
-    <Compile Include="Assets\Scripts\Card\CardTurnOver.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\CompositionExample\Scripts\WeightPropertyMinMaxRandomInt.cs" />
     <Compile Include="Assets\Scripts\Utils\PictureMgr.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\WeightPropertyMyNewClassType.cs" />
@@ -100,15 +101,13 @@
     <Compile Include="Assets\Scripts\CSV Parser\CSVParser.cs" />
     <Compile Include="Assets\Scripts\Config\ScriptableObject\SOClipsData.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewEnumType\MyNewEnumType.cs" />
+    <Compile Include="Assets\Scripts\Bean\BattleEnermyBean.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\PercentageExample\Scripts\PercentageExample.cs" />
     <Compile Include="Assets\Scripts\Utils\CheckPlatform.cs" />
     <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\GeneralExample\Scripts\GeneralExample.cs" />
-    <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\SelectiveRandomWeightMyNewClassType.cs" />
-    <Compile Include="Assets\Scripts\Battle\BattlePlayerInfo.cs" />
-    <Compile Include="Assets\Scripts\Bean\CharacterBean.cs" />
-    <Compile Include="Assets\Scripts\Bean\BattlePlayerBean.cs" />
-    <Compile Include="Assets\Scripts\Bean\BattleEnermyBean.cs" />
     <Compile Include="Assets\Scripts\Battle\BattleEnermyInfo.cs" />
+    <Compile Include="Assets\Scripts\Bean\BattlePlayerBean.cs" />
+    <Compile Include="Assets\vodoleystudio\RandomElementsSystemDomain\Examples\NewTypesExample\Scripts\MyNewClassType\SelectiveRandomWeightMyNewClassType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
