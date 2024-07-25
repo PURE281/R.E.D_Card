@@ -158,6 +158,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                 //随机造成一定伤害
                 BattleEnermyInfo.Instance?.Attack(() =>
                 {
+                    BattleSystemMgr.Instance?.CheckIsWin();
                     SwitchBattleType(BattleType.PlayerTurn);
                 });
                 break;
@@ -298,7 +299,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         });
         EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_SHOW_CARD_EFFECT, action);
     }
-    void CheckIsWin()
+    public void CheckIsWin()
     {
         if (BattleEnermyInfo.Instance?.Character._curHP <= 0)
         {

@@ -12,8 +12,11 @@ public class BattleSceneMgr : MonoSington<BattleSceneMgr>
     {
         //≥ı ºªØΩ≈±æ
         this.AddComponent<BattleSystemMgr>();
+        this.GetComponent<BattleSystemMgr>().global = false;
         this.AddComponent<EventCenter>().Init();
+        this.GetComponent<EventCenter>().global = false;
         this.AddComponent<BattleUIMgr>();
+        this.GetComponent<BattleUIMgr>().global = false;
         Application.targetFrameRate = 120;
     }
 }

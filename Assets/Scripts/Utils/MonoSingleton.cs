@@ -5,7 +5,7 @@ using UnityEngine;
 //泛型约束的作用顾名思义就是约束泛型传入的类型，一共有六种约束方式这里不展开讲。
 public abstract class MonoSington<T> : MonoBehaviour where T : MonoBehaviour
 {
-    public bool global = true;
+    public bool global = false;
 
     static T instance;
     public static T Instance

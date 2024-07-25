@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static EnumMgr;
 using Sequence = DG.Tweening.Sequence;
@@ -40,6 +41,10 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         _settlementGO.transform.SetParent(_mainCanvas.transform.Find("PC"));
         _settlementGO.transform.GetComponent<RectTransform>().offsetMin = Vector2.zero;
         _settlementGO.transform.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        _settlementGO.GetComponentInChildren<Button>().onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("MainScene");
+        });
         _settlementGO.SetActive(false);
 
         _cardMenuGO.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
@@ -47,6 +52,7 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
             BattlePlayerInfo.Instance?.Attack(() =>
             {
                 _cardMenuGO.transform.GetChild(0).GetComponent<Button>().interactable = false;
+                BattleSystemMgr.Instance?.CheckIsWin();
             });
         });
         _cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
@@ -127,11 +133,11 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
             foreach (var item in group)
             {
 
-                if (!_temSelectedUpgradeCardList.Contains(cardItem) && cardItem._isSelected)
+                if (!_temSelectedUpgradeCardList.Contains(cardItem) && cardItem._isSelected )
                 {
                     _temSelectedUpgradeCardList.Add(cardItem);
                 }
-                if (_sameCardNum >= 1)
+                if (_sameCardNum >= 1 && item._cardInfo.upgrade_id != "")
                 {
                     Debug.Log("相同，可升星");
                     item.ShowUpdadteCard();
@@ -152,14 +158,15 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         {
             foreach (var item in group)
             {
-                if (!_temSelectedComboCardList.Contains(cardItem) && cardItem._isSelected)
+                if (!_temSelectedComboCardList.Contains(cardItem) && cardItem._isSelected )
                 {
                     _temSelectedComboCardList.Add(cardItem);
                 }
                 if (_temSelectedComboCardList.Count > 1)
                 {
                     if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
-                        && _temSelectedComboCardList[0]._cardInfo.combo_id == item._cardInfo.combo_id)
+                        && _temSelectedComboCardList[0]._cardInfo.combo_id == item._cardInfo.combo_id
+                        && item._cardInfo.combo_id!="")
                     {
                         Debug.Log("可进行连携攻击");
                         item.ShowComboCard();
@@ -185,12 +192,13 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
             foreach (var item in group)
             {
 
-                if (!_temSelectedFusionList.Contains(cardItem) && cardItem._isSelected)
+                if (!_temSelectedFusionList.Contains(cardItem) && cardItem._isSelected )
                 {
                     _temSelectedFusionList.Add(cardItem);
                 }
                 if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
-                    && _temSelectedFusionList[0]._cardInfo.fusion_id == item._cardInfo.fusion_id)
+                    && _temSelectedFusionList[0]._cardInfo.fusion_id == item._cardInfo.fusion_id
+                    && item._cardInfo.fusion_id != "")
                 {
                     Debug.Log("相同，可融合");
                     item.ShowFusionCard();
@@ -376,14 +384,15 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
 
     void ShowPlayerWin(object data)
     {
-        this._settlementGO.GetComponent<CanvasGroup>().DOFade(0,0);
-        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1,0);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(0, 0);
+        this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1, 0);
         this._settlementGO.SetActive(true);
         this._settlementGO.transform.GetChild(0).gameObject.SetActive(true);
         this._settlementGO.transform.GetChild(1).gameObject.SetActive(false);
-        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1,1f);
-        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1,1f);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
+        this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
         this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1.2f, 1.5f);
+        MusicManager.Instance?.PlayBgmByIndex(2,170);
         BattleSystemMgr.Instance?.SwitchBattleType(BattleType.End);
     }
     void ShowPlayerLose(object data)
@@ -396,6 +405,7 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
         this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
         this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1.2f, 1.5f);
+        MusicManager.Instance?.PlayBgmByIndex(4, 20);
         BattleSystemMgr.Instance?.SwitchBattleType(BattleType.End);
     }
 

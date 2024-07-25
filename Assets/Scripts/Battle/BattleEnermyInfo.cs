@@ -61,12 +61,12 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     {
         float tem = this.Character._curAtk;
         this.Character._curAtk += value;
+        _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character._curAtk}";
+        DOTween.To(() => tem, x => tem = x, this.Character._curAtk, 0.5f).SetEase(Ease.Linear).Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
             _atkPanel.transform.DOScale(1.2f, 1f);
-            _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character._curAtk}";
-            DOTween.To(() => tem, x => tem = x, this.Character._curAtk, 0.5f).SetEase(Ease.Linear).Play();
         }).AppendInterval(1).AppendCallback(() =>
         {
             _atkPanel.transform.DOScale(1f, 0);
@@ -80,11 +80,12 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     {
         float tem = this.Character._curDef;
         this.Character._curDef += value;
+        _defPanel.GetComponentInChildren<Text>().text = $"{this.Character._curDef}";
+        DOTween.To(() => tem, x => tem = x, this.Character._curDef, 0.5f).SetEase(Ease.Linear).Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
             _defPanel.transform.DOScale(1.2f, 1f);
-            _defPanel.GetComponentInChildren<Text>().text = $"{this.Character._curDef}";
         }).AppendInterval(1).AppendCallback(() =>
         {
             _defPanel.transform.DOScale(1f, 0);
