@@ -31,6 +31,8 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
     private bool isActive = false;
 
     public Button _startCardsbtn;
+
+    private IEnumerator _getCardIE;
     [SerializeField]
     /// <summary>
     /// 储存当前现场卡牌的对象
@@ -40,17 +42,23 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
 
     void Awake()
     {
+    }
+    public void Init()
+    {
+        _startCardsbtn.interactable = false;
         //初始化卡牌
         StartCoroutine(InitBattleCard());
     }
-
     public void GetCard()
     {
+        //这里需要暂时关闭抽卡的按钮
+        this._startCardsbtn.interactable = false;
         for (int i = 0; i < _cardsInHand.Count; i++)
         {
             Destroy(_cardsInHand[i]);
         }
-        StartCoroutine(CreateCardGo(10));
+        _getCardIE = CreateCardGo(10);
+        StartCoroutine(_getCardIE);
     }
 
     IEnumerator InitBattleCard()
@@ -86,6 +94,8 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
         ShuffleList(cardList);
         //RollCards();
         yield return null;
+
+        _startCardsbtn.interactable = true;
     }
 
     public IEnumerator CreateCardGo(int cardMax)
@@ -114,6 +124,7 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
             CardsInHand.Add(gameObject1);
 
         }
+        this._startCardsbtn.interactable = true;
     }
 
     float commonCardChance = 0.8f;//r
@@ -171,7 +182,7 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
         while (n > 1)
         {
             n--;
-            int k = UnityEngine.Random.Range(0, n + 1); // 注意Unity的Random.Range是包含上限的  
+            int k = new MinMaxRandomInt(0, n + 1).GetRandomValue();
             KeyValuePair<string, CardInfoBean> temp = list[k];
             list[k] = list[n];
             list[n] = temp;

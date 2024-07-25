@@ -44,9 +44,16 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
 
         _cardMenuGO.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
-            BattleSystemMgr.Instance?.SwitchBattleType(BattleType.EnermyTurn);
+            BattlePlayerInfo.Instance?.Attack(() =>
+            {
+                _cardMenuGO.transform.GetChild(0).GetComponent<Button>().interactable = false;
+            });
         });
         _cardMenuGO.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+        {
+            BattleSystemMgr.Instance?.SwitchBattleType(BattleType.EnermyTurn);
+        });
+        _cardMenuGO.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
         {
             BattleSystemMgr.Instance?.ToMainScene();
         });
@@ -351,10 +358,12 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         this._cardMenuGO.SetActive(true);
         if (BattleSystemMgr.Instance?.BattleType == BattleType.PlayerTurn)
         {
+            this._cardMenuGO.transform.GetChild(0).GetComponent<Button>().interactable = true;
             this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = true;
         }
         else
         {
+            this._cardMenuGO.transform.GetChild(0).GetComponent<Button>().interactable = false;
             this._cardMenuGO.transform.GetChild(1).GetComponent<Button>().interactable = false;
         }
     }

@@ -12,8 +12,8 @@ public class CsvManager : Singleton<CsvManager>
     {
         Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
         List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CardData.csv");
-        for (int i = 1; i < data.Count - 1; i++)
-            //for (int i = 1; i < 10; i++)
+        //for (int i = 1; i < data.Count - 1; i++)
+        for (int i = 1; i < 10; i++)
         {
             CardInfoBean cardInfo = new CardInfoBean();
             cardInfo.id = data[i][0];
@@ -43,7 +43,7 @@ public class CsvManager : Singleton<CsvManager>
     public Dictionary<int, CharacterBean> ReadCharacterInfoCSVFile()
     {
         Dictionary<int, CharacterBean> keyValuePairs = new Dictionary<int, CharacterBean>();
-        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets","CharacterData.csv");
+        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CharacterData.csv");
         for (int i = 1; i < data.Count - 1; i++)
         {
             switch (int.Parse(data[i][3]))

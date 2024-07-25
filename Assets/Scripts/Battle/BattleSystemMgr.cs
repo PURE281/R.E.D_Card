@@ -245,8 +245,8 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                 case CardType.Atk:
                     //直接造成伤害
                     //计算伤害
-                    float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
-                    BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value + temAtk));
+                    //float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
+                    BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value));
                     string log = $"玩家使用卡片对敌人造成了{cardInfo.value}点的伤害";
                     Debug.Log(log);
                     //text.text = log;
@@ -326,8 +326,8 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                     case CardType.Atk:
                         //直接造成伤害
                         //计算伤害
-                        float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
-                        BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value + temAtk) * 1.2f);
+                        //float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
+                        BattleEnermyInfo.Instance?.UpdateHp(-(cardInfo.value) * 1.2f);
                         string log = $"玩家使用卡片对敌人造成了{cardInfo.value}点的伤害";
                         Debug.Log(log);
                         //text.text = log;
