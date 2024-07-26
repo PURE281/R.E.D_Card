@@ -84,6 +84,33 @@ public class CsvManager : Singleton<CsvManager>
         }
         return keyValuePairs;
     }
+
+    public Dictionary<string, CardInfoBean> ReadPlayerCardInfoCSVFile()
+    {
+        Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
+        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "PlayerCardData.csv");
+        for (int i = 1; i < data.Count - 1; i++)
+        //for (int i = 1; i < 21; i++)
+        {
+            CardInfoBean cardInfo = new CardInfoBean();
+            cardInfo.id = data[i][0];
+            cardInfo.proficiency = data[i][1];
+            //cardInfo.type = string2CardType(data[i][2]);
+            //cardInfo.value = int.Parse(data[i][3]);
+            //cardInfo.cast = data[i][4];
+            //cardInfo.description = data[i][5];
+            //cardInfo.spritePath = data[i][6];
+            //cardInfo.clipPath = data[i][7];
+            //cardInfo.upgrade_id = data[i][8];
+            //cardInfo.combo_id = data[i][9];
+            //cardInfo.fusion_id = data[i][10];
+            //cardInfo.proficiency = data[i][11];
+            //cardInfo.probability = data[i][13].Replace("\r", "");
+            keyValuePairs.Add(cardInfo.id, cardInfo);
+        }
+        return keyValuePairs;
+    }
+
     CardType string2CardType(string type)
     {
         switch (type)
