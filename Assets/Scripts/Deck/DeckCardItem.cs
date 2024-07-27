@@ -72,7 +72,6 @@ public class DeckCardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     /// </summary>
     public IEnumerator ToFront()
     {
-        if (_mFront.transform.localRotation.y == 0) yield break;
         isActive = true;
         _mBack.transform.DORotate(new Vector3(0, 90, 0), mTime);
         MusicManager.Instance?.PlayClipByIndex(0);
@@ -86,13 +85,10 @@ public class DeckCardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             case "r":
                 break;
             case "sr":
-              
                 break;
             case "ssr":
-                
                 break;
             case "ur":
-                
                 break;
         }
         
@@ -109,6 +105,7 @@ public class DeckCardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             this._mFront.transform.Find("Pic").GetComponent<Image>().sprite = _cardPic;
             PictureMgr.Instance?.AdjustImageToAspectFit(this._mFront.transform.Find("Pic").GetComponent<Image>(), this.GetComponent<RectTransform>());
         }
+
         //显示加载的数据
         this._mFront.transform.Find("ProPanel").GetComponentInChildren<Text>().text = HightlightPro(infos.probability);
         this._mFront.transform.Find("AtkPanel/Value").GetComponent<Text>().text = infos.value.ToString();

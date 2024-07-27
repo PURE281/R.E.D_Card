@@ -3,124 +3,102 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 管理卡组展示UI的脚本
-/// </summary>
-public class DeckUIManager : MonoSington<DeckUIManager>
+public class DeckUIManager : MonoBehaviour
 {
-    //一个是查看全部卡牌的卡组
-    Dictionary<string, CardInfoBean> _allCardInfoDicts;
-    //一个是当前用户自己拥有的卡组
-    Dictionary<string, CardInfoBean> _playerCardInfoDicts;
-
-    //ui组件
-    GameObject _allCardInfoUIPanel;
-
-    GameObject _playerCardInfoUIPanel;
-
-    List<GameObject> _cardGOList;
+    GameObject _cardsPanelGo;
+    List<GameObject> _cardsGo;
     public void Init()
     {
-        _allCardInfoDicts = DeckManager.Instance?.AllCardInfoDicts;
-        _playerCardInfoDicts = DeckManager.Instance?.PlayerCardInfoDicts;
-        if (_allCardInfoDicts == null)
+        _cardsPanelGo = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("CardPanel").gameObject;
+        _cardsGo = new List<GameObject>();
+        //初始化底部的上下页按钮监听事件
+        Button[] _buttomBtns = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("ButtomBtnPanel").GetComponentsInChildren<Button>();
+        _buttomBtns[0].onClick.AddListener(() =>
         {
-            ToastManager.Instance?.CreatToast("加载卡组信息失败");
-            return;
+            this.GetPreviousPageCards();
+        });
+        _buttomBtns[1].onClick.AddListener(() =>
+        {
+            this.GetNextPageCards();
+        });
+        //初始化左侧的切换卡组按钮监听事件
+        Button[] _lefttns = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("LeftBtnPanel").GetComponentsInChildren<Button>();
+        _lefttns[0].onClick.AddListener(() =>
+        {
+            DeckCardManager.Instance?.SetTemDicts(1);
+            this.GetNextPageCards();
+        });
+        _lefttns[1].onClick.AddListener(() =>
+        {
+            DeckCardManager.Instance?.SetTemDicts(2);
+            this.GetNextPageCards();
+        });
+        _lefttns[2].onClick.AddListener(() =>
+        {
+            DeckCardManager.Instance?.SetTemDicts(3);
+            this.GetNextPageCards();
+        });
+
+        //生成10个预制体
+        GameObject tem = Resources.Load<GameObject>("Prefabs/DeckCard");
+        for (int i = 0; i < DeckSceneMgr.PageSize; i++)
+        {
+            GameObject tem1 = Instantiate(tem);
+            tem1.transform.SetParent(_cardsPanelGo.transform);
+            tem1.AddComponent<DeckCardItem>();
+            _cardsGo.Add(tem1);
         }
-        //添加点击事件
-        Button[] buttons = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("ButtomBtnPanel").GetComponentsInChildren<Button>();
-        buttons[0].onClick.AddListener(() =>
-        {
-            this.ShowPreviousCardsList();
-        });
-        buttons[1].onClick.AddListener(() =>
-        {
-            this.ShowNextCardsList();
-        });
-        //加载预制体
-        _cardGOList = new List<GameObject>();
+        DeckCardManager.Instance?.SetTemDicts(1);
+        this.GetNextPageCards();
     }
-    public void ShowNextCardsList()
+
+    void GetNextPageCards()
     {
-        List<CardInfoBean> cardInfoBeans = DeckManager.Instance.SelectNextPage();
+        List<CardInfoBean> cardInfoBeans = DeckCardManager.Instance?.NextPage();
         if (cardInfoBeans == null) return;
-        if (_cardGOList.Count == 0)
+        int minLength = Mathf.Min(_cardsGo.Count,cardInfoBeans.Count);
+        if (minLength != DeckSceneMgr.PageSize)
         {
-            for (int i = 0; i < DeckSceneMgr.Instance?.num; i++)
+            for (int i = minLength; i < _cardsGo.Count; i++)
             {
-                //生成5个卡片的预制体
-                GameObject tem = Resources.Load<GameObject>("Prefabs/DeckCard");
-                GameObject tem1 = Instantiate(tem);
-                tem1.transform.parent = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("CardPanel");
-                tem1.AddComponent<DeckCardItem>();
-                _cardGOList.Add(tem1);
-            }
-        }
-        if (_cardGOList.Count != cardInfoBeans.Count)
-        {
-            for (int i = cardInfoBeans.Count; i < _cardGOList.Count; i++)
-            {
-                _cardGOList[i].SetActive(false);
+                _cardsGo[i].SetActive(false);
             }
         }
         else
         {
-            for (int i = 0; i < _cardGOList.Count; i++)
+            for (int i = 0; i < _cardsGo.Count; i++)
             {
-                _cardGOList[i].SetActive(true);
+                _cardsGo[i].SetActive(true);
             }
         }
         for (int i = 0; i < cardInfoBeans.Count; i++)
         {
-            _cardGOList[i].GetComponent<DeckCardItem>().Init(cardInfoBeans[i]);
-            _cardGOList[i].GetComponent<DeckCardItem>().StartFront();
+            _cardsGo[i].GetComponent<DeckCardItem>().Init(cardInfoBeans[i]);
+            _cardsGo[i].GetComponent<DeckCardItem>().StartFront();
         }
     }
-    public void ShowOriCardsList()
+    void GetPreviousPageCards()
     {
-        List<CardInfoBean> cardInfoBeans = DeckManager.Instance.GetCardsByPage();
+        List<CardInfoBean> cardInfoBeans = DeckCardManager.Instance?.PreviousPage();
         if (cardInfoBeans == null) return;
-        if (_cardGOList.Count == 0)
+        int minLength = Mathf.Min(_cardsGo.Count, cardInfoBeans.Count);
+        if (minLength != DeckSceneMgr.PageSize)
         {
-            for (int i = 0; i < DeckSceneMgr.Instance?.num; i++)
+            for (int i = minLength; i < _cardsGo.Count; i++)
             {
-                //生成5个卡片的预制体
-                GameObject tem = Resources.Load<GameObject>("Prefabs/DeckCard");
-                GameObject tem1 = Instantiate(tem);
-                tem1.transform.parent = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("CardPanel");
-                tem1.AddComponent<DeckCardItem>();
-                _cardGOList.Add(tem1);
-            }
-        }
-        if (_cardGOList.Count != cardInfoBeans.Count)
-        {
-            for (int i = cardInfoBeans.Count; i < _cardGOList.Count; i++)
-            {
-                _cardGOList[i].SetActive(false);
+                _cardsGo[i].SetActive(false);
             }
         }
         else
         {
-            for (int i = 0; i < _cardGOList.Count; i++)
+            for (int i = 0; i < _cardsGo.Count; i++)
             {
-                _cardGOList[i].SetActive(true);
+                _cardsGo[i].SetActive(true);
             }
         }
         for (int i = 0; i < cardInfoBeans.Count; i++)
         {
-            _cardGOList[i].GetComponent<DeckCardItem>().Init(cardInfoBeans[i]);
-            _cardGOList[i].GetComponent<DeckCardItem>().StartFront();
-        }
-    }
-    public void ShowPreviousCardsList()
-    {
-        List<CardInfoBean> cardInfoBeans = DeckManager.Instance.SelectPreviousPage();
-        if(cardInfoBeans==null) return;
-        for (int i = 0; i < _cardGOList.Count; i++)
-        {
-            _cardGOList[i].GetComponent<DeckCardItem>().Init(cardInfoBeans[i]);
-            _cardGOList[i].GetComponent<DeckCardItem>().StartFront();
+            _cardsGo[i].GetComponent<DeckCardItem>().Init(cardInfoBeans[i]);
         }
     }
 }

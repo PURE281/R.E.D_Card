@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class DeckSceneMgr : MonoSington<DeckSceneMgr>
 {
-    public int num = 10;
+    [SerializeField]
+    private const int pageSize = 10;
+
+    public static int PageSize => pageSize;
+
     private void Awake()
     {
-        this.AddComponent<DeckManager>();
-        this.GetComponent<DeckManager>().Init();
+        this.AddComponent<DeckCardManager>();
+        this.GetComponent<DeckCardManager>().Init();
         this.AddComponent<DeckUIManager>();
         this.GetComponent<DeckUIManager>().Init();
-        this.GetComponent<DeckUIManager>().ShowOriCardsList();
     }
 }
