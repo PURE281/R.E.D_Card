@@ -15,7 +15,7 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     private GameObject _atkPanel;
     private GameObject _defPanel;
 
-    public void InitInfo(BattleEnermyBean characterBean)
+    public void InitInfo(CharacterBean characterBean)
     {
         this._character = characterBean;
         float enermyOrignX;
@@ -29,8 +29,8 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
         this._hpSlider = this.GetComponentInChildren<Slider>();
         _atkPanel = this.transform.Find("AtkPanel").gameObject;
         _defPanel = this.transform.Find("DefPanel").gameObject;
-        _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character._curAtk}";
-        _defPanel.GetComponentInChildren<Text>().text = $"{this.Character._curAtk}";
+        _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character.curAtk}";
+        _defPanel.GetComponentInChildren<Text>().text = $"{this.Character.curAtk}";
     }
     public CharacterBean Character { get => _character; }
 
@@ -41,17 +41,17 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     public void UpdateHp(float value)
     {
         //需要判断一下，如果扣除的血量低于护甲则不作血量扣除并进行友善提醒
-        if (value < 0 && Math.Abs(value) <= this.Character._curDef)
+        if (value < 0 && Math.Abs(value) <= this.Character.curDef)
         {
             ToastManager.Instance?.CreatToast("伤害低于护甲值，无法造成伤害~~~");
             return;
         }
-        if (value< 0 && Math.Abs(value) > this.Character._curDef)
+        if (value< 0 && Math.Abs(value) > this.Character.curDef)
         {
-            value = -(Math.Abs(value)-this.Character._curDef);
+            value = -(Math.Abs(value)-this.Character.curDef);
         }
-        this.Character._curHP += value;
-        this._hpSlider.DOValue(this.Character._curHP / this.Character._maxHP, 0.5f);
+        this.Character.curHP += value;
+        this._hpSlider.DOValue(this.Character.curHP / this.Character.maxHP, 0.5f);
     }
     /// <summary>
     /// 根据传入的数值进行攻击力的增减
@@ -59,10 +59,10 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     /// <param name="value"></param>
     public void UpdateAtk(float value)
     {
-        float tem = this.Character._curAtk;
-        this.Character._curAtk += value;
-        _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character._curAtk}";
-        DOTween.To(() => tem, x => tem = x, this.Character._curAtk, 0.5f).SetEase(Ease.Linear).Play();
+        float tem = this.Character.curAtk;
+        this.Character.curAtk += value;
+        _atkPanel.GetComponentInChildren<Text>().text = $"{this.Character.curAtk}";
+        DOTween.To(() => tem, x => tem = x, this.Character.curAtk, 0.5f).SetEase(Ease.Linear).Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -78,10 +78,10 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
     /// <param name="value"></param>
     public void UpdateDef(float value)
     {
-        float tem = this.Character._curDef;
-        this.Character._curDef += value;
-        _defPanel.GetComponentInChildren<Text>().text = $"{this.Character._curDef}";
-        DOTween.To(() => tem, x => tem = x, this.Character._curDef, 0.5f).SetEase(Ease.Linear).Play();
+        float tem = this.Character.curDef;
+        this.Character.curDef += value;
+        _defPanel.GetComponentInChildren<Text>().text = $"{this.Character.curDef}";
+        DOTween.To(() => tem, x => tem = x, this.Character.curDef, 0.5f).SetEase(Ease.Linear).Play();
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -102,7 +102,7 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
             this.transform.DOLocalMoveX(temPosX, 0.2f);
             this.transform.DOShakeScale(0.2f);
             float ranAtk = new MinMaxRandomFloat(3, 10).GetRandomValue();
-            BattlePlayerInfo.Instance?.UpdateHp(-(ranAtk + this.Character._curAtk));
+            BattlePlayerInfo.Instance?.UpdateHp(-(ranAtk + this.Character.curAtk));
         })
         .AppendInterval(0.2f)
         .AppendCallback(() =>

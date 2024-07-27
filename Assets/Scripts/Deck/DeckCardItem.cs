@@ -237,10 +237,9 @@ public class DeckCardItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (_cardClip!=null)
-        {
-            MusicManager.Instance?.PlayClipByClip(_cardClip);
-        }
+        //点击需要弹出详情页面
+        DeckUIManager.Instance?.ShowCardDetail(this);
+
     }
 
 

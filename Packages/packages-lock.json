@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.bshsf.csvutility": {
+      "version": "https://github.com/Bian-Sh/CsvUtility-For-Unity.git?path=Packages/CsvUtility",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "3797cb93f2a2a45e761f008c385d01f8207471cb"
+    },
     "com.unity.2d.animation": {
       "version": "7.1.0",
       "depth": 1,
@@ -104,12 +111,11 @@
       "dependencies": {}
     },
     "com.unity.burst": {
-      "version": "1.8.14",
+      "version": "1.8.11",
       "depth": 3,
       "source": "registry",
       "dependencies": {
-        "com.unity.mathematics": "1.2.1",
-        "com.unity.modules.jsonserialize": "1.0.0"
+        "com.unity.mathematics": "1.2.1"
       },
       "url": "https://packages.unity.cn"
     },

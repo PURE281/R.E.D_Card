@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using DG.Tweening.Plugins.Core.PathCore;
 using System.Security.Cryptography;
+using Newtonsoft.Json.Linq;
 
 namespace CSVToolKit
 {
@@ -68,7 +69,105 @@ namespace CSVToolKit
             }
             return result;
         }
+        public List<List<string>> ReadPlayerCardInfos(string path, string filename)
+        {
+            List<List<string>> result = new List<List<string>>();
+            string _temPath = (GetPath() + path) + "/" + filename;
+            if (!File.Exists(_temPath))
+            {
+                //初始化
+                FileStream fileStream = File.Create(_temPath);
+                fileStream.Close();
+                try
+                {
+                    string data = "";
+                    foreach (string value in new List<string>() { "CID", "Proficiency" })
+                        data += value + fieldSeperator;
 
+                    File.AppendAllText(_temPath, data);
+
+#if UNITY_EDITOR
+                    UnityEditor.AssetDatabase.Refresh();
+#endif
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Something went wrong while writing content{ex.Message}");
+                }
+            }
+            try
+            {
+                var source = new StreamReader((GetPath() + path) + "/" + filename);
+                var fileContents = source.ReadToEnd();
+                source.Close();
+                var records = fileContents.Split(lineSeperater);
+                foreach (string record in records)
+                {
+                    List<string> row = new List<string>();
+                    string[] fields = record.Split(fieldSeperator);
+                    foreach (string field in fields)
+                        row.Add(field);
+
+                    result.Add(row);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Something went wrong while reading content{ex.Message}");
+            }
+            return result;
+        }
+
+        public List<List<string>> ReadBattleCardInfos(string path, string filename)
+        {
+            List<List<string>> result = new List<List<string>>();
+            string _temPath = (GetPath() + path) + "/" + filename;
+            if (!File.Exists(_temPath))
+            {
+                //初始化
+                FileStream fileStream = File.Create(_temPath);
+                fileStream.Close();
+                try
+                {
+                    string data = "";
+                    foreach (string value in new List<string>() { "CID", "Proficiency" })
+                        data += value + fieldSeperator;
+
+                    File.AppendAllText(_temPath, data);
+
+#if UNITY_EDITOR
+                    UnityEditor.AssetDatabase.Refresh();
+#endif
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Something went wrong while writing content{ex.Message}");
+                }
+            }
+            try
+            {
+                var source = new StreamReader((GetPath() + path) + "/" + filename);
+                var fileContents = source.ReadToEnd();
+                source.Close();
+                var records = fileContents.Split(lineSeperater);
+                foreach (string record in records)
+                {
+                    List<string> row = new List<string>();
+                    string[] fields = record.Split(fieldSeperator);
+                    foreach (string field in fields)
+                        row.Add(field);
+
+                    result.Add(row);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Something went wrong while reading content{ex.Message}");
+            }
+            return result;
+        }
         public void AddData(string path, string filename, List<string> values)
         {
             try
@@ -89,7 +188,44 @@ namespace CSVToolKit
                 Debug.LogError("Something went wrong while writing content");
             }
         }
+        public void AddPlayerCardData(string path, List<int> values)
+        {
+            try
+            {
+                string data = lineSeperater.ToString();
+                foreach (int value in values)
+                    data += value + fieldSeperator;
 
+                File.AppendAllText(GetPath() + path, data);
+
+#if UNITY_EDITOR
+                UnityEditor.AssetDatabase.Refresh();
+#endif
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Something went wrong while writing content");
+            }
+        }
+        public void AddBattleCardData(string path, List<int> values)
+        {
+            try
+            {
+                string data = lineSeperater.ToString();
+                foreach (int value in values)
+                    data += value + fieldSeperator;
+
+                File.AppendAllText(GetPath() + path, data);
+
+#if UNITY_EDITOR
+                UnityEditor.AssetDatabase.Refresh();
+#endif
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Something went wrong while writing content");
+            }
+        }
         private static string GetPath()
         {
             if (Application.platform == RuntimePlatform.WindowsEditor)
@@ -97,7 +233,7 @@ namespace CSVToolKit
 
             }
 #if UNITY_EDITOR
-            return Application.dataPath;
+            return Application.persistentDataPath;
 #elif UNITY_ANDROID
 			return Application.persistentDataPath;
 #elif UNITY_IPHONE

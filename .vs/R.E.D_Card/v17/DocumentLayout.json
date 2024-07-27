@@ -3,56 +3,28 @@
   "WorkspaceRootPath": "E:\\UnityProject\\R.E.D_Card\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\deck\\deckmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|e:\\unityproject\\r.e.d_card\\assets\\scripts\\utils\\csvmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\utils\\csvmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\deck\\deckscenemgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckscenemgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|e:\\unityproject\\r.e.d_card\\assets\\scripts\\battle\\battlesystemmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battlesystemmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\deck\\deckcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckcardmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\deck\\deckcarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckcarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\deck\\deckuimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckuimanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\utils\\csvmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\utils\\csvmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|e:\\unityproject\\r.e.d_card\\assets\\scripts\\deck\\deckcarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\deck\\deckcarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\battle\\battlecarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battlecarditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\card\\carditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\card\\carditem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\battle\\battlesystemmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battlesystemmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\battle\\battleplayerinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battleplayerinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\battle\\battleenermyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battleenermyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\battle\\battleuimgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\battle\\battleuimgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\card\\cardgroupmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\card\\cardgroupmgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|E:\\UnityProject\\R.E.D_Card\\assets\\scripts\\scenes\\battlescenemgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B18EE14-F0A2-8E64-B1F1-D6AE28AB1597}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scenes\\battlescenemgr.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -62,168 +34,85 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
+              "Title": "BattleSystemMgr.cs",
+              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
+              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvw0AAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-27T10:24:53.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CsvManager.cs",
+              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Utils\\CsvManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Utils\\CsvManager.cs",
+              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Utils\\CsvManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Utils\\CsvManager.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-27T09:23:28.346Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CardGroupMgr.cs",
+              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardGroupMgr.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Card\\CardGroupMgr.cs",
+              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardGroupMgr.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Card\\CardGroupMgr.cs",
+              "ViewState": "AQIAADgAAAAAAAAAAAAYwEMAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-27T08:39:40.484Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DeckCardManager.cs",
+              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckCardManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Deck\\DeckCardManager.cs",
+              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckCardManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Deck\\DeckCardManager.cs",
+              "ViewState": "AQIAAGsAAAAAAAAAAAAuwHgAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-27T01:09:03.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "DeckCardItem.cs",
               "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckCardItem.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Deck\\DeckCardItem.cs",
               "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckCardItem.cs",
               "RelativeToolTip": "Assets\\Scripts\\Deck\\DeckCardItem.cs",
-              "ViewState": "AQIAACcAAAAAAAAAAAAmwGsAAAAAAAAA",
+              "ViewState": "AQIAAHwAAAAAAAAAAAAqwPAAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-26T07:42:47.366Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DeckSceneMgr.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckSceneMgr.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Deck\\DeckSceneMgr.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckSceneMgr.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Deck\\DeckSceneMgr.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAA7AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-26T07:34:26.51Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "DeckUIManager.cs",
               "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckUIManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Deck\\DeckUIManager.cs",
               "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckUIManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Deck\\DeckUIManager.cs",
-              "ViewState": "AQIAADcAAAAAAAAAAAAswFIAAAAqAAAA",
+              "ViewState": "AQIAAJwAAAAAAAAAAAAgwLIAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-26T06:41:39.894Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DeckManager.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Deck\\DeckManager.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Deck\\DeckManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Deck\\DeckManager.cs",
-              "ViewState": "AQIAABEAAAAAAAAAAAAowBwAAAAyAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-26T06:35:33.936Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "BattleEnermyInfo.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleEnermyInfo.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattleEnermyInfo.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleEnermyInfo.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattleEnermyInfo.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAApwCoAAAAqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T03:24:47.718Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "BattlePlayerInfo.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattlePlayerInfo.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattlePlayerInfo.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattlePlayerInfo.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattlePlayerInfo.cs",
-              "ViewState": "AQIAAB4AAAAAAAAAAAAjwDIAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-25T03:24:41.518Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "BattleSceneMgr.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Scenes\\BattleSceneMgr.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Scenes\\BattleSceneMgr.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Scenes\\BattleSceneMgr.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Scenes\\BattleSceneMgr.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAADwvwgAAAApAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-24T06:51:32.302Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CardItem.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardItem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Card\\CardItem.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardItem.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Card\\CardItem.cs",
-              "ViewState": "AQIAAHcAAAAAAAAAAAAcwEgAAAAeAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-24T06:39:58.071Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BattleCardItem.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleCardItem.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattleCardItem.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleCardItem.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattleCardItem.cs",
-              "ViewState": "AQIAAJYAAAAAAAAAAAAYwKoAAAB3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-24T06:38:06.883Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "BattleUIMgr.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleUIMgr.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattleUIMgr.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleUIMgr.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattleUIMgr.cs",
-              "ViewState": "AQIAACEAAAAAAAAAAAAMwC4AAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-17T06:02:23.535Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CsvManager.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Utils\\CsvManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Utils\\CsvManager.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Utils\\CsvManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Utils\\CsvManager.cs",
-              "ViewState": "AQIAAEUAAAAAAAAAAAAkwFcAAABFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-23T03:31:57.452Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "CardGroupMgr.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardGroupMgr.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Card\\CardGroupMgr.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Card\\CardGroupMgr.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Card\\CardGroupMgr.cs",
-              "ViewState": "AQIAAKMAAAAAAAAAAAAqwLgAAAAwAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-22T06:24:59.792Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "BattleSystemMgr.cs",
-              "DocumentMoniker": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
-              "ToolTip": "E:\\UnityProject\\R.E.D_Card\\Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Battle\\BattleSystemMgr.cs",
-              "ViewState": "AQIAAHkAAAAAAAAAAAAtwIkAAABSAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-15T03:16:23.142Z"
             }
           ]
         }

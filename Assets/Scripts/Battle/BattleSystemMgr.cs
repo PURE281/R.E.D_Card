@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using static EnumMgr;
 using DG.Tweening;
 using Sequence = DG.Tweening.Sequence;
+using zFramework.Extension;
+using CSVToolKit;
 /// <summary>
 /// 回合制对战系统的管理脚本
 /// </summary>
@@ -24,7 +26,10 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
     /// <summary>
     /// 储存所有可使用的卡牌信息的对象
     /// </summary>
-    private Dictionary<string, CardInfoBean> cardinfos = new Dictionary<string, CardInfoBean>();
+    private Dictionary<int, CardInfoBean> _allCardsDicts = new Dictionary<int, CardInfoBean>();
+    //private Dictionary<int, CardInfoBean> _playerCardDicts = new Dictionary<int, CardInfoBean>();
+    private Dictionary<int, CardInfoBean> _battleCardDicts = new Dictionary<int, CardInfoBean>();
+    private Dictionary<int, CardInfoBean> _temCardDicts = new Dictionary<int, CardInfoBean>();
 
 
     [SerializeField]
@@ -52,6 +57,11 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
 
     public void GetCard()
     {
+        if (_temCardDicts.Count <= 0)
+        {
+            ToastManager.Instance?.CreatToast("你打算徒手打boss吗....");
+            return;
+        }
         if (_cardsInHand.Count > 5)
         {
             //说明不满足条件，不允许获取卡片
@@ -67,18 +77,47 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
     }
     IEnumerator InitBattleCard()
     {
+        List<CardInfoBean> allCardInfoBeans = CsvManager.Instance?.GetAllCards();
         //加载所有卡牌信息
-        cardinfos = CsvManager.Instance?.ReadCardInfoCSVFile();
+
+        foreach (var cardInfoBean in allCardInfoBeans)
+        {
+            _allCardsDicts.Add(cardInfoBean.id,cardInfoBean);
+        }
+        List<PlayerCardBean> playerCardInfoBeans = CsvManager.Instance?.GetBattleCards();
+
+        foreach (var cardInfoBean in playerCardInfoBeans)
+        {
+            if (_allCardsDicts.ContainsKey(cardInfoBean.cid))
+            {
+                _battleCardDicts.Add(cardInfoBean.cid, _allCardsDicts[cardInfoBean.cid]);
+            }
+        }
 
         // 步骤1: 将Dictionary的键值对添加到列表中  
-        List<KeyValuePair<string, CardInfoBean>> cardList = cardinfos.ToList();
+        //List<KeyValuePair<string, CardInfoBean>> cardList = _allCardsDicts.ToList();
+        //List<KeyValuePair<string, CardInfoBean>> cardList2 = playerCards.ToList();
 
         // 步骤2: 随机打乱列表  
-        ShuffleList(cardList);
+        //cardinfos = ShuffleList(cardList);
+        //playerCards = ShuffleList(cardList2);
+        if (GlobalConfig.Instance?.BattleMode == 1)
+        {
+            _temCardDicts = _allCardsDicts;
+        }
+        else
+        {
+            _temCardDicts = _battleCardDicts;
+        }
+        if (_temCardDicts.Count<=0)
+        {
+            ToastManager.Instance?.CreatToast("你打算徒手打boss吗....");
+            yield break;
+        }
         yield return StartCoroutine(CreateCardGo(5));
         //RollCards();
     }
-
+    
     CardInfoBean CreateCardInfoBean(CardInfoBean bean)
     {
 
@@ -98,7 +137,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         cardInfo.probability = bean.probability;
         return cardInfo;
     }
-    void ShuffleList(List<KeyValuePair<string, CardInfoBean>> list)
+    Dictionary<string, CardInfoBean> ShuffleList(List<KeyValuePair<string, CardInfoBean>> list)
     {
         int n = list.Count;
         while (n > 1)
@@ -114,8 +153,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         {
             shuffledCardDict.Add(kvp.Key, kvp.Value);
         }
-
-        cardinfos = shuffledCardDict;
+        return shuffledCardDict;
     }
 
     public void SwitchBattleType(BattleType battleType)
@@ -178,7 +216,8 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
     private void InitPlayerInfo()
     {
         //从本地读取数据
-        Dictionary<int, CharacterBean> characterDicts = CsvManager.Instance?.ReadCharacterInfoCSVFile();
+        //Dictionary<int, CharacterBean> characterDicts = CsvManager.Instance?.ReadCharacterInfoCSVFile();\
+        List<CharacterBean> characterDicts = CsvManager.Instance?.GetCharactersInfo();
         //初始化角色go
         GameObject _templayer = Resources.Load<GameObject>("Prefabs/BattlePlayerGo");
         GameObject _temEnermy = Resources.Load<GameObject>("Prefabs/BattleEnermyGo");
@@ -192,10 +231,10 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         _enermyGo.transform.SetAsFirstSibling();
         _enermyGo.transform.localPosition = Vector3.zero;
         _enermyGo.name = "BattleEnermyGo";
-        BattlePlayerBean battlePlayerBean = (BattlePlayerBean)characterDicts[0];
+        CharacterBean battlePlayerBean = characterDicts[0];
         _playerGo.AddComponent<BattlePlayerInfo>();
         _playerGo.GetComponent<BattlePlayerInfo>().InitInfo(battlePlayerBean);
-        BattleEnermyBean battleEnermyBean = (BattleEnermyBean)characterDicts[1];
+        CharacterBean battleEnermyBean = characterDicts[1];
         _enermyGo.AddComponent<BattleEnermyInfo>();
         _enermyGo.GetComponent<BattleEnermyInfo>().InitInfo(battleEnermyBean);
     }
@@ -214,11 +253,11 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
             gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardGroup/Panel"));
             //gameObject1.transform.localScale = Vector3.one;
             //给预制体添加卡片信息
-            int _temIndex = new MinMaxRandomInt(0, cardinfos.Count).GetRandomValue();
+            int _temIndex = new MinMaxRandomInt(0, _temCardDicts.Count).GetRandomValue();
             //Transform _cardFront = gameObject1.transform.Find("CardFront");
             gameObject1.AddComponent<BattleCardItem>();
             gameObject1.GetComponent<BattleCardItem>().StartFront();
-            CardInfoBean cardInfoBean = CreateCardInfoBean(cardinfos.ElementAt(_temIndex).Value);
+            CardInfoBean cardInfoBean = CreateCardInfoBean(_temCardDicts.ElementAt(_temIndex).Value);
             //_cardFront.GetComponent<CardItem>()._index = i;
             gameObject1.GetComponent<BattleCardItem>().Init(cardInfoBean);
 
@@ -243,7 +282,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
             CardInfoBean cardInfo = cardItem._cardInfo;
             switch (cardInfo.type)
             {
-                case CardType.Atk:
+                case 0:
                     //直接造成伤害
                     //计算伤害
                     //float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
@@ -252,40 +291,40 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.AtkUp:
+                case 1:
                     BattlePlayerInfo.Instance?.UpdateAtk(cardInfo.value);
                     log = $"玩家使用卡片提升自身{cardInfo.value}点的攻击力";
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.AtkDown:
+                case 2:
                     BattleEnermyInfo.Instance?.UpdateAtk(-cardInfo.value);
                     log = $"玩家使用卡片降低敌方{cardInfo.value}点的攻击力";
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.DefUp:
+                case 3:
                     BattlePlayerInfo.Instance?.UpdateDef(cardInfo.value);
                     log = $"玩家使用卡片提升自身{cardInfo.value}点的防御力";
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.DefDown:
+                case 4:
                     BattleEnermyInfo.Instance?.UpdateDef(-cardInfo.value);
                     log = $"玩家使用卡片降低敌方{cardInfo.value}点的防御力";
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.Sleep:
+                case 5:
                     log = $"玩家使用卡片让敌方睡眠跳过一回合";
                     Debug.Log(log);
                     //text.text = log;
                     break;
-                case CardType.Cover:
+                case 6:
                     BattlePlayerInfo.Instance?.UpdateHp(cardInfo.value);
                     log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
                     break;
-                case CardType.None:
+                case 7:
                     log = $"玩家使用卡片....无事发生";
                     Debug.Log(log);
                     //text.text = log;
@@ -301,13 +340,13 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
     }
     public void CheckIsWin()
     {
-        if (BattleEnermyInfo.Instance?.Character._curHP <= 0)
+        if (BattleEnermyInfo.Instance?.Character.curHP <= 0)
         {
             //胜利
             SwitchBattleType(BattleType.Winner);
             return;
         }
-        if (BattlePlayerInfo.Instance?.Character._curHP <= 0)
+        if (BattlePlayerInfo.Instance?.Character.curHP <= 0)
         {
             //失败
             SwitchBattleType(BattleType.Lose);
@@ -324,7 +363,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                 CardInfoBean cardInfo = cardItem._cardInfo;
                 switch (cardInfo.type)
                 {
-                    case CardType.Atk:
+                    case 0:
                         //直接造成伤害
                         //计算伤害
                         //float temAtk = (float)BattlePlayerInfo.Instance?.Character._curAtk;
@@ -333,40 +372,40 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.AtkUp:
+                    case 1:
                         BattlePlayerInfo.Instance?.UpdateAtk(cardInfo.value * 1.2f);
                         log = $"玩家使用卡片提升自身{cardInfo.value}点的攻击力";
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.AtkDown:
+                    case 2:
                         BattleEnermyInfo.Instance?.UpdateAtk(-cardInfo.value * 1.2f);
                         log = $"玩家使用卡片降低敌方{cardInfo.value}点的攻击力";
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.DefUp:
+                    case 3:
                         BattlePlayerInfo.Instance?.UpdateDef(cardInfo.value * 1.2f);
                         log = $"玩家使用卡片提升自身{cardInfo.value}点的防御力";
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.DefDown:
+                    case 4:
                         BattleEnermyInfo.Instance?.UpdateDef(-cardInfo.value);
                         log = $"玩家使用卡片降低敌方{cardInfo.value}点的防御力";
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.Sleep:
+                    case 5:
                         log = $"玩家使用卡片让敌方睡眠跳过一回合";
                         Debug.Log(log);
                         //text.text = log;
                         break;
-                    case CardType.Cover:
+                    case 6:
                         BattlePlayerInfo.Instance?.UpdateHp(cardInfo.value * 1.2f);
                         log = $"玩家使用卡片回复我方{cardInfo.value}点的血量";
                         break;
-                    case CardType.None:
+                    case 7:
                         log = $"玩家使用卡片....无事发生";
                         Debug.Log(log);
                         //text.text = log;
@@ -383,14 +422,14 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
 
     }
 
-    public CardInfoBean LoadCardItemById(string id)
+    public CardInfoBean LoadCardItemById(int id)
     {
-        if (!cardinfos.ContainsKey(id))
+        if (!_allCardsDicts.ContainsKey(id))
         {
             Debug.LogError("找不到相应id的卡片信息");
             return null;
         }
-        CardInfoBean bean = cardinfos[id];
+        CardInfoBean bean = _allCardsDicts[id];
         return bean;
     }
     public void ToMainScene()

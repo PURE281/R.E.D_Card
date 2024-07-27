@@ -42,7 +42,7 @@ public class MusicManager : MonoSington<MusicManager>
     public void PlayClipByIndex(int index,int start = 0)
     {
         this._clipsAudioSource.clip = _clipsData?.clips[index];
-        Debug.Log(this._clipsAudioSource.clip.length);
+        //Debug.Log(this._clipsAudioSource.clip.length);
         this._clipsAudioSource.time = start;
         this._clipsAudioSource.Play();
     }

@@ -1,137 +1,100 @@
 using CSVToolKit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using zFramework.Extension;
 using static EnumMgr;
 
 public class CsvManager : Singleton<CsvManager>
 {
 
-    public Dictionary<string, CardInfoBean> ReadCardInfoCSVFile()
+
+    public List<CardInfoBean> GetAllCards()
     {
-        Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
-        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CardData.csv");
-        for (int i = 1; i < data.Count - 1; i++)
-            //for (int i = 1; i < 21; i++)
+        try
         {
-            CardInfoBean cardInfo = new CardInfoBean();
-            cardInfo.id = data[i][0];
-            cardInfo.name = data[i][1];
-            cardInfo.type = string2CardType(data[i][2]);
-            cardInfo.value = int.Parse(data[i][3]);
-            cardInfo.cast = data[i][4];
-            cardInfo.description = data[i][5];
-            cardInfo.spritePath = data[i][6];
-            cardInfo.clipPath = data[i][7];
-            cardInfo.upgrade_id = data[i][8];
-            cardInfo.combo_id = data[i][9];
-            cardInfo.fusion_id = data[i][10];
-            cardInfo.proficiency = data[i][11];
-            cardInfo.probability = data[i][13].Replace("\r", "");
-            keyValuePairs.Add(cardInfo.id, cardInfo);
+            return CsvUtility.Read<CardInfoBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "CardData.csv");
         }
-        return keyValuePairs;
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            return new List<CardInfoBean>();
+        }
+    }
+    public List<PlayerCardBean> GetBattleCards()
+    {
+        try
+        {
+            return CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            return new List<PlayerCardBean>();
+        }
+    }
+    public List<PlayerCardBean> GetPlayerCards()
+    {
+        try
+        {
+            return CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "PlayerCardData.csv");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            return new List<PlayerCardBean>();
+        }
+    }
+    public List<CharacterBean> GetCharactersInfo()
+    {
+        try
+        {
+            return CsvUtility.Read<CharacterBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "CharacterData.csv");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            return new List<CharacterBean>();
+        }
     }
 
-    public void AddContents(string fileName, List<string> infoList)
+    public void AddPlayerCard(int id)
     {
-        CSVParser.Instance.AddData("/StreamingAssets", fileName, infoList);
-        //ReadCardInfoCSVFile(fileName);
+        //先检查是否已经有这个id了，有的话则不进行添加
+        try
+        {
+            PlayerCardBean playerCard = CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "PlayerCardData.csv", v => v.cid == id);
+            ToastManager.Instance?.CreatToast("当前用户已存在该卡牌");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            //进行添加
+            PlayerCardBean bean = new PlayerCardBean();
+            bean.cid = id;
+            bean.proficiency = 0;
+            CsvUtility.Write(new List<PlayerCardBean>() { bean }, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "PlayerCardData.csv");
+        }
+           
     }
 
-    public Dictionary<int, CharacterBean> ReadCharacterInfoCSVFile()
-    {
-        Dictionary<int, CharacterBean> keyValuePairs = new Dictionary<int, CharacterBean>();
-        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "CharacterData.csv");
-        for (int i = 1; i < data.Count - 1; i++)
+    public void AddBattleCard(int id)
+    {//先检查是否已经有这个id了，有的话则不进行添加
+        try
         {
-            switch (int.Parse(data[i][3]))
-            {
-                case 0:
-                    //玩家
-                    BattlePlayerBean playerInfo = new BattlePlayerBean();
-                    playerInfo._id = int.Parse(data[i][0]);
-                    playerInfo._name = data[i][1];
-                    playerInfo._level = (int.Parse(data[i][2]));
-                    playerInfo._type = int.Parse(data[i][3]);
-                    playerInfo._maxHP = int.Parse(data[i][4]);
-                    playerInfo._curHP = int.Parse(data[i][5]);
-                    playerInfo._oriAtk = int.Parse(data[i][6]);
-                    playerInfo._curAtk = int.Parse(data[i][7]);
-                    playerInfo._oriDef = int.Parse(data[i][8]);
-                    playerInfo._curDef = int.Parse(data[i][9]);
-                    playerInfo._description = data[i][10].Replace("\r", "");
-                    keyValuePairs.Add(playerInfo._type, playerInfo);
-                    break;
-                case 1:
-                    //玩家
-                    BattleEnermyBean enmeryInfo = new BattleEnermyBean();
-                    enmeryInfo._id = int.Parse(data[i][0]);
-                    enmeryInfo._name = data[i][1];
-                    enmeryInfo._level = (int.Parse(data[i][2]));
-                    enmeryInfo._type = int.Parse(data[i][3]);
-                    enmeryInfo._maxHP = int.Parse(data[i][4]);
-                    enmeryInfo._curHP = int.Parse(data[i][5]);
-                    enmeryInfo._oriAtk = int.Parse(data[i][6]);
-                    enmeryInfo._curAtk = int.Parse(data[i][7]);
-                    enmeryInfo._oriDef = int.Parse(data[i][8]);
-                    enmeryInfo._curDef = int.Parse(data[i][9]);
-                    enmeryInfo._description = data[i][10].Replace("\r", "");
-                    keyValuePairs.Add(enmeryInfo._type, enmeryInfo);
-                    break;
-            }
+            PlayerCardBean playerCard = CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv", v => v.cid == id);
+            ToastManager.Instance?.CreatToast("当前用户已存在该卡牌");
         }
-        return keyValuePairs;
-    }
-
-    public Dictionary<string, CardInfoBean> ReadPlayerCardInfoCSVFile()
-    {
-        Dictionary<string, CardInfoBean> keyValuePairs = new Dictionary<string, CardInfoBean>();
-        List<List<string>> data = CSVParser.Instance.ReadData("/StreamingAssets", "PlayerCardData.csv");
-        for (int i = 1; i < data.Count - 1; i++)
-        //for (int i = 1; i < 21; i++)
+        catch (Exception ex)
         {
-            CardInfoBean cardInfo = new CardInfoBean();
-            cardInfo.id = data[i][0];
-            cardInfo.proficiency = data[i][1];
-            //cardInfo.type = string2CardType(data[i][2]);
-            //cardInfo.value = int.Parse(data[i][3]);
-            //cardInfo.cast = data[i][4];
-            //cardInfo.description = data[i][5];
-            //cardInfo.spritePath = data[i][6];
-            //cardInfo.clipPath = data[i][7];
-            //cardInfo.upgrade_id = data[i][8];
-            //cardInfo.combo_id = data[i][9];
-            //cardInfo.fusion_id = data[i][10];
-            //cardInfo.proficiency = data[i][11];
-            //cardInfo.probability = data[i][13].Replace("\r", "");
-            keyValuePairs.Add(cardInfo.id, cardInfo);
+            Debug.Log($"数据为零{ex.Message}");
+            //进行添加
+            PlayerCardBean bean = new PlayerCardBean();
+            bean.cid = id;
+            bean.proficiency = 0;
+            CsvUtility.Write(new List<PlayerCardBean>() { bean }, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv");
         }
-        return keyValuePairs;
-    }
-
-    CardType string2CardType(string type)
-    {
-        switch (type)
-        {
-            case "0":
-                return CardType.Atk;
-            case "1":
-                return CardType.AtkUp;
-            case "2":
-                return CardType.AtkDown;
-            case "3":
-                return CardType.DefUp;
-            case "4":
-                return CardType.DefDown;
-            case "5":
-                return CardType.Sleep;
-            case "6":
-                return CardType.Cover;
-            case "7":
-                return CardType.None;
-        }
-        return CardType.None;
     }
 }

@@ -133,11 +133,11 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
             foreach (var item in group)
             {
 
-                if (!_temSelectedUpgradeCardList.Contains(cardItem) && cardItem._isSelected )
+                if (!_temSelectedUpgradeCardList.Contains(cardItem) && cardItem._isSelected)
                 {
                     _temSelectedUpgradeCardList.Add(cardItem);
                 }
-                if (_sameCardNum >= 1 && item._cardInfo.upgrade_id != "")
+                if (_sameCardNum >= 1 && item._cardInfo.upgrade_id != 0)
                 {
                     Debug.Log("相同，可升星");
                     item.ShowUpdadteCard();
@@ -158,7 +158,7 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         {
             foreach (var item in group)
             {
-                if (!_temSelectedComboCardList.Contains(cardItem) && cardItem._isSelected )
+                if (!_temSelectedComboCardList.Contains(cardItem) && cardItem._isSelected)
                 {
                     _temSelectedComboCardList.Add(cardItem);
                 }
@@ -166,7 +166,7 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
                 {
                     if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
                         && _temSelectedComboCardList[0]._cardInfo.combo_id == item._cardInfo.combo_id
-                        && item._cardInfo.combo_id!="")
+                        && item._cardInfo.combo_id != 0)
                     {
                         Debug.Log("可进行连携攻击");
                         item.ShowComboCard();
@@ -192,13 +192,13 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
             foreach (var item in group)
             {
 
-                if (!_temSelectedFusionList.Contains(cardItem) && cardItem._isSelected )
+                if (!_temSelectedFusionList.Contains(cardItem) && cardItem._isSelected)
                 {
                     _temSelectedFusionList.Add(cardItem);
                 }
                 if (_temSelectedComboCardList[0]._cardInfo.id != item._cardInfo.id
                     && _temSelectedFusionList[0]._cardInfo.fusion_id == item._cardInfo.fusion_id
-                    && item._cardInfo.fusion_id != "")
+                    && item._cardInfo.fusion_id != 0)
                 {
                     Debug.Log("相同，可融合");
                     item.ShowFusionCard();
@@ -251,8 +251,8 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         //根据传入的对象id，查询缓存中的对象集合，将相同的集合并且靠前的索引进行销毁，并根据传入的对象的upgradeid进行新对象的生成
         GameObject tem2UpgradeCard = (GameObject)card;
         if (tem2UpgradeCard == null) { Debug.LogError("请检查传入的对象"); return; }
-        string id = tem2UpgradeCard.GetComponent<BattleCardItem>()._cardInfo.id;
-        string upgradeid = tem2UpgradeCard.GetComponent<BattleCardItem>()._cardInfo.upgrade_id;
+        int id = tem2UpgradeCard.GetComponent<BattleCardItem>()._cardInfo.id;
+        int upgradeid = tem2UpgradeCard.GetComponent<BattleCardItem>()._cardInfo.upgrade_id;
         //找到在卡组中跟这个升级的卡片相同id的第一个
         List<BattleCardItem> temList = _temSelectedUpgradeCardList.Where(x => x._cardInfo.id == id).ToList();
         //将最先选中的卡片进行献祭销毁，将新的卡片覆盖到点击升级的这张卡片上
@@ -273,8 +273,8 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         //根据传入的对象id，查询缓存中的对象集合，将相同的集合并且靠前的索引进行销毁，并根据传入的对象的upgradeid进行新对象的生成
         GameObject tem2ComboCard = (GameObject)card;
         if (tem2ComboCard == null) { Debug.LogError("请检查传入的对象"); return; }
-        string id = tem2ComboCard.GetComponent<BattleCardItem>()._cardInfo.id;
-        string combo_id = tem2ComboCard.GetComponent<BattleCardItem>()._cardInfo.combo_id;
+        int id = tem2ComboCard.GetComponent<BattleCardItem>()._cardInfo.id;
+        int combo_id = tem2ComboCard.GetComponent<BattleCardItem>()._cardInfo.combo_id;
         //找到在卡组中跟这个升级的卡片相同id的第一个
         List<BattleCardItem> temList = _temSelectedComboCardList.Where(x => x._cardInfo.combo_id == combo_id).ToList();
         //将最先选中的卡片进行献祭销毁，将新的卡片覆盖到点击升级的这张卡片上
@@ -292,8 +292,8 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         //根据传入的对象id，查询缓存中的对象集合，将相同的集合并且靠前的索引进行销毁，并根据传入的对象的upgradeid进行新对象的生成
         GameObject tem2FusionCard = (GameObject)card;
         if (tem2FusionCard == null) { Debug.LogError("请检查传入的对象"); return; }
-        string id = tem2FusionCard.GetComponent<BattleCardItem>()._cardInfo.id;
-        string fusion_id = tem2FusionCard.GetComponent<BattleCardItem>()._cardInfo.fusion_id;
+        int id = tem2FusionCard.GetComponent<BattleCardItem>()._cardInfo.id;
+        int fusion_id = tem2FusionCard.GetComponent<BattleCardItem>()._cardInfo.fusion_id;
         //找到在卡组中跟这个升级的卡片相同id的第一个
         List<BattleCardItem> temList = _temSelectedFusionList.Where(x => x._cardInfo.fusion_id == fusion_id).ToList();
         //将最先选中的卡片进行献祭销毁，将新的卡片覆盖到点击升级的这张卡片上
@@ -392,7 +392,7 @@ public class BattleUIMgr : MonoSington<BattleUIMgr>
         this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
         this._settlementGO.GetComponent<CanvasGroup>().DOFade(1, 1f);
         this._settlementGO.GetComponent<CanvasGroup>().transform.DOScale(1.2f, 1.5f);
-        MusicManager.Instance?.PlayBgmByIndex(2,170);
+        MusicManager.Instance?.PlayBgmByIndex(2, 170);
         BattleSystemMgr.Instance?.SwitchBattleType(BattleType.End);
     }
     void ShowPlayerLose(object data)

@@ -15,4 +15,27 @@ public class GlobalConfig:Singleton<GlobalConfig>
 
     private int _deckOption = 1;
 
+    private int _battleMode = 1;
+    /// <summary>
+    /// 1代表娱乐模式，娱乐模式下可抽到所有卡牌
+    /// 2代表普通模式，普通模式下只可抽到玩家已有的卡牌
+    /// </summary>
+    public int BattleMode { get => _battleMode; set => _battleMode = value; }
+
+    public string GetPath()
+    {
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+
+        }
+#if UNITY_EDITOR
+        return Application.persistentDataPath;
+#elif UNITY_ANDROID
+			return Application.persistentDataPath;
+#elif UNITY_IPHONE
+			return GetiPhoneDocumentsPath();
+#else
+			return Application.dataPath;
+#endif
+    }
 }
