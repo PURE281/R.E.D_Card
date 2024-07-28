@@ -84,7 +84,7 @@ public class BattleSystemMgr : MonoSington<BattleSystemMgr>
         {
             _allCardsDicts.Add(cardInfoBean.id,cardInfoBean);
         }
-        List<PlayerCardBean> playerCardInfoBeans = CsvManager.Instance?.GetBattleCards();
+        List<PlayerCardBean> playerCardInfoBeans = CsvManager.Instance?.GetPlayerCards();
 
         foreach (var cardInfoBean in playerCardInfoBeans)
         {

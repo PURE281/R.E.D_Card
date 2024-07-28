@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DeckUIManager : MonoSington<DeckUIManager>
@@ -16,6 +17,12 @@ public class DeckUIManager : MonoSington<DeckUIManager>
     DeckCardItem _temDeckCardItem;
     public void Init()
     {
+        //注册返回主场景事件
+        Button backBtn = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Back").GetComponent<Button>();
+        backBtn.onClick.AddListener(() =>
+        {
+            this.Back2Main();
+        });
         _cardsPanelGo = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("CardPanel").gameObject;
         _cardsGo = new List<GameObject>();
         _cardDetailPanel = GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("CardDetailPanel").gameObject;
@@ -181,5 +188,10 @@ public class DeckUIManager : MonoSington<DeckUIManager>
     void RemoveBattleCard()
     {
         DeckCardManager.Instance?.RemoveBattleCard(_temDeckCardItem._cardInfo.id, 0);
+    }
+
+    void Back2Main()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 }

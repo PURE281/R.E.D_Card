@@ -78,7 +78,8 @@ public class MainSceneMgr : MonoSington<MainSceneMgr>
     }
     public void ToIntroScene()
     {
-        SceneManager.LoadScene("IntroductScene");
+        //SceneManager.LoadScene("IntroductScene");
+        ToastManager.Instance?.CreatToast("敬请期待");
     }
     public void ToDeckScene()
     {
@@ -122,7 +123,27 @@ public class MainSceneMgr : MonoSington<MainSceneMgr>
             try
             {
                 //添加数据
-                CsvUtility.Write(new List<PlayerCardBean> {  }, _temCardDataPath);
+                List<PlayerCardBean> playerCardBeans = new List<PlayerCardBean>();
+                playerCardBeans.Add(new PlayerCardBean(3,0));
+                playerCardBeans.Add(new PlayerCardBean(6,0));
+                playerCardBeans.Add(new PlayerCardBean(44,0));
+                playerCardBeans.Add(new PlayerCardBean(46,0));
+                playerCardBeans.Add(new PlayerCardBean(49,0));
+                playerCardBeans.Add(new PlayerCardBean(50,0));
+                playerCardBeans.Add(new PlayerCardBean(52,0));
+                playerCardBeans.Add(new PlayerCardBean(55,0));
+                playerCardBeans.Add(new PlayerCardBean(56,0));
+                playerCardBeans.Add(new PlayerCardBean(71,0));
+                playerCardBeans.Add(new PlayerCardBean(72,0));
+                playerCardBeans.Add(new PlayerCardBean(75,0));
+                playerCardBeans.Add(new PlayerCardBean(90,0));
+                playerCardBeans.Add(new PlayerCardBean(91,0));
+                playerCardBeans.Add(new PlayerCardBean(99,0));
+                playerCardBeans.Add(new PlayerCardBean(100,0));
+                playerCardBeans.Add(new PlayerCardBean(117,0));
+                playerCardBeans.Add(new PlayerCardBean(118,0));
+                playerCardBeans.Add(new PlayerCardBean(137,0));
+                CsvUtility.Write(playerCardBeans, _temCardDataPath);
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.Refresh();
 #endif
