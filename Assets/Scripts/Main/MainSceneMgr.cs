@@ -172,6 +172,8 @@ public class MainSceneMgr : MonoSington<MainSceneMgr>
                 Debug.LogError($"Something went wrong while writing content{ex.Message}");
             }
         }
+
+        MainUIManager.Instance?.Init();
         //playerdata
     }
 
@@ -188,6 +190,8 @@ public class MainSceneMgr : MonoSington<MainSceneMgr>
     //°²×¿Â·¾¶
 #elif UNITY_ANDROID
             url = $"jar:file://{Application.dataPath}!/assets/{fileName}";
+#elif UNITY_WEBGL
+            url =  (GlobalConfig.Instance.GetPath() + "/StreamingAssets") + "/" + "CardData.csv";
  
 #endif
         if (!Directory.Exists($"{Application.persistentDataPath}/StreamingAssets"))

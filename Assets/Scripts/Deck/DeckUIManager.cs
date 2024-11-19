@@ -158,15 +158,20 @@ public class DeckUIManager : MonoSington<DeckUIManager>
             $"ÊýÖµ£º{deckCardItem._cardInfo.value}\n" +
             $"ÃèÊö£º{deckCardItem._cardInfo.description}";
         this._cardDetailIntroduction.transform.GetChild(0).GetComponentInChildren<Text>().DOText(text,1.5f);
-        if (GlobalConfig.Instance?.DeckOption==1)
+        switch (GlobalConfig.Instance?.DeckOption)
         {
-            addAndRemCardBtns[0].interactable = false;
-            addAndRemCardBtns[1].interactable = false;
-        }
-        else
-        {
-            addAndRemCardBtns[0].interactable = true;
-            addAndRemCardBtns[1].interactable = true;
+            case 1:
+                addAndRemCardBtns[0].gameObject.SetActive(false);
+                addAndRemCardBtns[1].gameObject.SetActive(false);
+                break;
+            case 2:
+                addAndRemCardBtns[0].gameObject.SetActive(true);
+                addAndRemCardBtns[1].gameObject.SetActive(false);
+                break;
+            case 3:
+                addAndRemCardBtns[0].gameObject.SetActive(false);
+                addAndRemCardBtns[1].gameObject.SetActive(true);
+                break;
         }
     }
 
@@ -179,6 +184,13 @@ public class DeckUIManager : MonoSington<DeckUIManager>
         this._cardDetailPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         this._cardDetailIntroduction.transform.GetChild(0).GetComponentInChildren<Text>().text = null;
 
+    }
+
+    public void RefreshBattleCards()
+    {
+        this.CloseCardDetail();
+        DeckCardManager.Instance?.SetTemDicts(3);
+        this.GetNextPageCards();
     }
 
     void AddBattleCard()

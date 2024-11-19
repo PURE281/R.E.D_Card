@@ -38,4 +38,12 @@ public class GlobalConfig:Singleton<GlobalConfig>
 			return Application.dataPath;
 #endif
     }
+
+    public const string _baseUrlDevelop = "http://localhost:82/api.php";
+    public const string _baseUrlOffical = "http://www.pure81.site:83/api.php";
+
+    public const string _playerName = "Player";
+    public UserModel _curUserModel;
+
+
 }

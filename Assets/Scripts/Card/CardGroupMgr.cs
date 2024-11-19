@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Newtonsoft.Json.Linq;
 using RandomElementsSystem.Types;
 using System;
 using System.Collections;
@@ -13,20 +14,20 @@ using UnityEngine.UI;
 using zFramework.Extension;
 
 /// <summary>
-/// ÕâÊÇÓÃÀ´¹ÜÀí³é¿¨µÄ¿¨×éµÄ¹ÜÀíÀà
-/// ÊµÏÖ¹¦ÄÜ£¬´òÂÒ¿¨ÅÆË³Ğò£¬Ëæ»ú°´ÕÕË³ĞòÒÀ´Î³öÏÖ£¬È»ºóÒÀ´Î×ª³öÕıÃæ£¬ÔÚÌØ±ğµÄÍ¼Æ¬ÖĞĞèÒªÓĞÌØ¶¨µÄ´¦Àí
+/// 
 /// </summary>
 public class CardGroupMgr : MonoSington<CardGroupMgr>
 {
 
     /// <summary>
-    /// ´¢´æËùÓĞ¿ÉÊ¹ÓÃµÄ¿¨ÅÆĞÅÏ¢µÄ¶ÔÏó
+    /// 
     /// </summary>
     private Dictionary<int, CardInfoBean> _allCardsDicts = new Dictionary<int, CardInfoBean>();
     private List<CardInfoBean> rCardList = new List<CardInfoBean>();
     private List<CardInfoBean> srCardList = new List<CardInfoBean>();
     private List<CardInfoBean> ssrCardList = new List<CardInfoBean>();
     private List<CardInfoBean> urCardList = new List<CardInfoBean>();
+    private List<CardInfoBean> _temDrawCardList = new List<CardInfoBean>();
     //private List<Sprite> sprite_cards_list = new List<Sprite>();
 
     private bool isActive = false;
@@ -36,7 +37,7 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
     private IEnumerator _getCardIE;
     [SerializeField]
     /// <summary>
-    /// ´¢´æµ±Ç°ÏÖ³¡¿¨ÅÆµÄ¶ÔÏó
+    /// 
     /// </summary>
     private List<GameObject> _cardsInHand = new List<GameObject>();
     public List<GameObject> CardsInHand { get => _cardsInHand; }
@@ -47,32 +48,30 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
     public void Init()
     {
         _startCardsbtn.interactable = false;
-        //³õÊ¼»¯¿¨ÅÆ
-        StartCoroutine(InitBattleCard());
+        //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        StartCoroutine(InitCard());
     }
     public void GetCard()
     {
-        //ÕâÀïĞèÒªÔİÊ±¹Ø±Õ³é¿¨µÄ°´Å¥
         this._startCardsbtn.interactable = false;
         for (int i = 0; i < _cardsInHand.Count; i++)
         {
             Destroy(_cardsInHand[i]);
         }
+        _temDrawCardList.Clear();
         _getCardIE = CreateCardGo(10);
         StartCoroutine(_getCardIE);
     }
 
-    IEnumerator InitBattleCard()
+    IEnumerator InitCard()
     {
-        //¼ÓÔØËùÓĞ¿¨ÅÆĞÅÏ¢
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¿ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
         List<CardInfoBean> allCardInfoBeans = CsvUtility.Read<CardInfoBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "CardData.csv");
-        //¼ÓÔØËùÓĞ¿¨ÅÆĞÅÏ¢
 
         foreach (var cardInfoBean in allCardInfoBeans)
         {
             _allCardsDicts.Add(cardInfoBean.id, cardInfoBean);
         }
-        // ²½Öè1: ½«DictionaryµÄ¼üÖµ¶ÔÌí¼Óµ½ÁĞ±íÖĞ  
         List<KeyValuePair<int, CardInfoBean>> cardList = _allCardsDicts.ToList();
         var groups = cardList.GroupBy(x => x.Value.probability);
         foreach (var group in groups)
@@ -96,7 +95,7 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
                 }
             }
         }
-        // ²½Öè2: Ëæ»ú´òÂÒÁĞ±í  
+        // ï¿½ï¿½ï¿½ï¿½2: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½  
         //ShuffleList(cardList);
         //RollCards();
         yield return null;
@@ -106,23 +105,20 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
 
     public IEnumerator CreateCardGo(int cardMax)
     {
-        //Ö´ĞĞÍê³ÉÖ®Ç°²»ÔÊĞíÊ¹ÓÃ¿¨×é
         //EventCenter.Instance?.dispatch(CustomEvent.BATTLE_UI_INACTIVATE_CARDSINHAND);
         string assetsName = "Card";
         GameObject cardGo = Resources.Load<GameObject>($"Prefabs/{assetsName}");
         for (int i = 0; i < cardMax; i++)
         {
-
-            //³õÊ¼»¯goÔ¤ÖÆÌå
             GameObject gameObject1 = Instantiate(cardGo);
             yield return new WaitForSeconds(0.5f);
             gameObject1.transform.SetParent(GameObject.FindWithTag("MainCanvas").transform.Find("PC/CardPanel"));
             //gameObject1.transform.localScale = Vector3.one;
-            //¸øÔ¤ÖÆÌåÌí¼Ó¿¨Æ¬ĞÅÏ¢
             int _temIndex = new MinMaxRandomInt(0, _allCardsDicts.Count).GetRandomValue();
             //Transform _cardFront = gameObject1.transform.Find("CardFront");
             gameObject1.AddComponent<CardItem>();
             CardInfoBean cardInfoBean = CreateCardInfoBean(GetCardBeanByProbability());
+            _temDrawCardList.Add(cardInfoBean);
             //_cardFront.GetComponent<CardItem>()._index = i;
             gameObject1.GetComponent<CardItem>().Init(cardInfoBean);
             gameObject1.GetComponent<CardItem>().StartFront();
@@ -130,6 +126,8 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
             CardsInHand.Add(gameObject1);
 
         }
+        //è¿™é‡Œéœ€è¦è®°å½•ä¿å­˜åˆ°æ•°æ®åº“ä¸­
+
         this._startCardsbtn.interactable = true;
     }
 
@@ -153,11 +151,11 @@ public class CardGroupMgr : MonoSington<CardGroupMgr>
                 return srCardList[tem];
             case CardProbability.SSR:
                 tem = new MinMaxRandomInt(0, ssrCardList.Count).GetRandomValue();
-                Debug.Log("³éµ½ssrÀ²");
+                Debug.Log("ssr");
                 return ssrCardList[tem];
             case CardProbability.UR:
                 tem = new MinMaxRandomInt(0, urCardList.Count).GetRandomValue();
-                Debug.Log("³éµ½urÀ²");
+                Debug.Log("ur");
                 return urCardList[tem];
         }
         return null;

@@ -2,6 +2,7 @@ using CSVToolKit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using zFramework.Extension;
@@ -77,7 +78,7 @@ public class CsvManager : Singleton<CsvManager>
             bean.proficiency = 0;
             CsvUtility.Write(new List<PlayerCardBean>() { bean }, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "PlayerCardData.csv");
         }
-           
+
     }
 
     public void AddBattleCard(int id)
@@ -85,7 +86,51 @@ public class CsvManager : Singleton<CsvManager>
         try
         {
             PlayerCardBean playerCard = CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv", v => v.cid == id);
-            ToastManager.Instance?.CreatToast("当前用户已存在该卡牌");
+            if (playerCard != null)
+            {
+                ToastManager.Instance?.CreatToast("当前用户已存在该卡牌");
+            }
+            else
+            {
+                //进行添加
+                PlayerCardBean bean = new PlayerCardBean();
+                bean.cid = id;
+                bean.proficiency = 0;
+                List<PlayerCardBean> playerCardBeans = this.GetBattleCards();
+                playerCardBeans.Add(bean);
+                CsvUtility.Write(playerCardBeans, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv");
+                ToastManager.Instance?.CreatToast("已成功添加至对战卡组，可前往查看~");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"数据为零{ex.Message}");
+            ToastManager.Instance?.CreatToast("已成功添加至对战卡组，可前往查看~");
+            //进行添加
+            PlayerCardBean bean = new PlayerCardBean();
+            bean.cid = id;
+            bean.proficiency = 0;
+            CsvUtility.Write(new List<PlayerCardBean>() { bean }, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv");
+        }
+    }
+
+    public void RemoveBattleCard(int id)
+    {
+        try
+        {
+            PlayerCardBean playerCard = CsvUtility.Read<PlayerCardBean>((GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv", v => v.cid == id);
+            if (playerCard == null)
+            {
+                ToastManager.Instance?.CreatToast("当前用户不存在该卡牌");
+            }
+            else
+            {
+                //进行移除
+                List<PlayerCardBean> playerCardBeans = this.GetBattleCards();
+                playerCardBeans.Remove(playerCardBeans.Where((value)=>value.cid == id).ToList()[0]);
+                CsvUtility.Write(playerCardBeans, (GlobalConfig.Instance?.GetPath() + "/StreamingAssets") + "/" + "BattleCardData.csv");
+                ToastManager.Instance?.CreatToast("已成功从对战卡组中移除");
+            }
         }
         catch (Exception ex)
         {

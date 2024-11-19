@@ -102,6 +102,7 @@ public class BattleEnermyInfo : MonoSington<BattleEnermyInfo>
             this.transform.DOLocalMoveX(temPosX, 0.2f);
             this.transform.DOShakeScale(0.2f);
             float ranAtk = new MinMaxRandomFloat(3, 10).GetRandomValue();
+            Debug.Log($"boss‘Ï≥……À∫¶{ranAtk}");
             BattlePlayerInfo.Instance?.UpdateHp(-(ranAtk + this.Character.curAtk));
         })
         .AppendInterval(0.2f)

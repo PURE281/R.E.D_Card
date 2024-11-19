@@ -43,6 +43,6 @@ public class ToastHandler : MonoBehaviour
     //∂—µ˛œÚ…œ“∆∂Ø
     public void Move(float speed, int targetPos)
     {
-        transform.DOLocalMoveY(targetPos * image.rectTransform.sizeDelta.y, speed);
+        transform.DOLocalMoveY(targetPos * image.rectTransform.sizeDelta.y+300, speed);
     }
 }

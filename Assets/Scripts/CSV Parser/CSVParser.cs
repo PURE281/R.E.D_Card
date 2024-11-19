@@ -44,7 +44,7 @@ namespace CSVToolKit
             try
             {
                 this.copy(filename);
-                var source = new StreamReader((GetPath()+path) + "/" + filename);
+                var source = new StreamReader((GetPath() + path) + "/" + filename);
                 var fileContents = source.ReadToEnd();
                 source.Close();
                 var records = fileContents.Split(lineSeperater);
@@ -177,7 +177,7 @@ namespace CSVToolKit
                 foreach (string value in values)
                     data += value + fieldSeperator;
 
-                File.AppendAllText(GetPath()+path + "/" + filename, data);
+                File.AppendAllText(GetPath() + path + "/" + filename, data);
 
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.Refresh();
@@ -263,6 +263,9 @@ namespace CSVToolKit
     //安卓路径
 #elif UNITY_ANDROID
             url = $"jar:file://{Application.dataPath}!/assets/{fileName}";
+
+#elif UNITY_WEBGL
+            url = (GlobalConfig.Instance.GetPath() + "/StreamingAssets") + "/" + "CardData.csv";
  
 #endif
             if (!Directory.Exists($"{Application.persistentDataPath}/StreamingAssets"))
@@ -302,5 +305,5 @@ namespace CSVToolKit
             }
         }
     }
-    
+
 }

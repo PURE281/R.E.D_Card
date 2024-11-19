@@ -1893,7 +1893,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   global: 1
-  _btnPanel: {fileID: 0}
+  _mainBtnPanel: {fileID: 0}
+  _battleBtnPanel: {fileID: 0}
 --- !u!1 &1352740273
 GameObject:
   m_ObjectHideFlags: 0

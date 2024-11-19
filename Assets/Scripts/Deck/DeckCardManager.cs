@@ -125,11 +125,23 @@ public class DeckCardManager : MonoSington<DeckCardManager>
     public void AddBattleCard(int cid, int prof)
     {
         CsvManager.Instance?.AddBattleCard(cid);
+        List<PlayerCardBean> battleCardBeans = CsvManager.Instance?.GetBattleCards();
+        foreach (var cardInfoBean in battleCardBeans)
+        {
+            if (_allCardsDicts.ContainsKey(cardInfoBean.cid))
+            {
+                if (_battleCardDicts.ContainsKey(cardInfoBean.cid)) continue;
+                _battleCardDicts.Add(cardInfoBean.cid, _allCardsDicts[cardInfoBean.cid]);
+            }
+        }
+        DeckUIManager.Instance.CloseCardDetail();
     }
     public void RemoveBattleCard(int cid, int prof)
     {
-        List<int> tem = new List<int>() { cid, prof };
-        //CSVParser.Instance.RemovePlayerCardData("/StreamingAssets/BattleCardData.csv", tem);
+        CsvManager.Instance?.RemoveBattleCard(cid);
+        _battleCardDicts.Remove(cid);
+        DeckUIManager.Instance.RefreshBattleCards();
+
     }
 
 }

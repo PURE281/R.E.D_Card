@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Battle_Bgms_Data
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: 36fafbbdd67abb64b8adf450d7a43d07, type: 3}
+  - {fileID: 8300000, guid: 64cfeef8671953148a61749ecd998f89, type: 3}
   - {fileID: 8300000, guid: 1702f1595fc294b469ac9ed609b5d05e, type: 3}
-  - {fileID: 8300000, guid: e1bcebbc1f79e32489442f757ba640b7, type: 3}
+  - {fileID: 8300000, guid: 59113ee100fa2ba4a9f8f1bc6e91192e, type: 3}
   - {fileID: 8300000, guid: 806181fdcce079a48b6076fdb1f1ccc5, type: 3}
-  - {fileID: 8300000, guid: 057aa93aa7222634e9e521f946f3f4f8, type: 3}
-  - {fileID: 8300000, guid: afaaea02856ff4647b45ccaa4ff529e8, type: 3}
+  - {fileID: 8300000, guid: 5d297c58cbf1d1549b09a3b373452bab, type: 3}
+  - {fileID: 8300000, guid: 64cfeef8671953148a61749ecd998f89, type: 3}
   - {fileID: 8300000, guid: 9e3dd8c1148ecf442ac1e490f98aef72, type: 3}
   - {fileID: 8300000, guid: cf929be1ca459d14db814ada2a4fab34, type: 3}
   - {fileID: 8300000, guid: b656e274e830ce84da9c9d897030671d, type: 3}
